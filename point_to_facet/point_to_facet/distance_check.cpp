@@ -115,18 +115,21 @@ bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, double du[3], double dv[3
 	UF_CSYS_create_matrix(matrix_values, &matrix_id);
 	UF_CSYS_create_csys(pt.pos, matrix_id, &csys_id);
 	UF_CSYS_set_wcs(csys_id);
-
+	
 	int numFacets = 0;
 	UF_FACET_ask_n_facets_in_model(object_facet, &numFacets);  //获取小平面体的个数
 	//for (int iLoop = 0; iLoop < numFacets; ++iLoop)
 	for (int iLoop = 0; iLoop < 1; ++iLoop)
 	{
 		int numVertices = 0;
-		double vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } };
-		UF_FACET_ask_vertices_of_facet(object_facet, iLoop, &numVertices, vertices);
-		for (int j = 0; j < numVertices; j++)
-		{
+		double vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } };
 
+		UF_FACET_ask_vertices_of_facet(object_facet, iLoop, &numVertices, vertices);
+		double map_vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } };
+
+		for (int jLoop = 0; jLoop < numVertices; jLoop++)
+		{
+			UF_CSYS_map_point(UF_CSYS_ROOT_COORDS, vertices[jLoop], UF_CSYS_WORK_COORDS, map_vertices[jLoop]);
 		}
 	}
 	FacetIsInFace = true;
