@@ -5,6 +5,7 @@
 #include "uf_curve.h"
 #include "uf_facet.h"
 #include "uf_csys.h"
+#include "uf_mtx.h"
 
 #include <time.h>
 #include <vector>
@@ -131,10 +132,11 @@ extern int CalcFaceFacetDistance(tag_t object_face,	tag_t object_facet, double &
 bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, bool &FacetIsInFace)
 {
     tag_t csys_id = 0;
-    const double matrix_values[9]
+    double matrix_values[9] = { 0 };
     tag_t matrix_id = 0;
-
-    UF_CSYS_create_matrix(matrix_values[9], &matrix_id);
+    
+    UF_MTX3_initialize(x_vec[3], y_vec[3], &matrix_values[9]);
+    UF_CSYS_create_matrix(&matrix_values[9], &matrix_id);
     UF_CSYS_create_csys( pt.pos,  matrix_id,  &csys_id);
 
     int numFacets = 0;
@@ -148,7 +150,6 @@ bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, bool &FacetIsInFace)
         {
             
         }
-
     }
     FacetIsInFace = true;
     return true;
