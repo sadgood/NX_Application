@@ -101,7 +101,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TargetMachine>MachineX64</TargetMachine>
-      <OutputFile>$(OutDir)/point_to_facet.dll</OutputFile>
+      <OutputFile>D:\NX85_APP\application/point_to_facet.dll</OutputFile>
       <ImportLibrary>$(OutDir)/point_to_facet.lib</ImportLibrary>
       <AdditionalLibraryDirectories>$(UGII_BASE_DIR)\ugopen;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libufun.lib;libnxopencpp.lib;libnxopencpp_annotations.lib;libnxopencpp_assemblies.lib;libnxopencpp_bodydes.lib;libnxopencpp_cae.lib;libnxopencpp_cam.lib;libnxopencpp_die.lib;libnxopencpp_display.lib;libnxopencpp_drafting.lib;libnxopencpp_drawings.lib;libnxopencpp_facet.lib;libnxopencpp_features.lib;libnxopencpp_fields.lib;libnxopencpp_formboard.lib;libnxopencpp_gateway.lib;libnxopencpp_geometricanalysis.lib;libnxopencpp_geometricutilities.lib;libnxopencpp_issue.lib;libnxopencpp_layer.lib;libnxopencpp_mechatronics.lib;libnxopencpp_modldirect.lib;libnxopencpp_motion.lib;libnxopencpp_optimization.lib;libnxopencpp_options.lib;libnxopencpp_pdm.lib;libnxopencpp_physmat.lib;libnxopencpp_positioning.lib;libnxopencpp_preferences.lib;libnxopencpp_routing.lib;libnxopencpp_shapesearch.lib;libnxopencpp_sheetmetal.lib;libnxopencpp_sim.lib;libnxopencpp_tooling.lib;libnxopencpp_userdefinedobjects.lib;libnxopencpp_validate.lib;libnxopencpp_visualreporting.lib;libnxopencpp_weld.lib;libugopenint.lib;libnxopenuicpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
