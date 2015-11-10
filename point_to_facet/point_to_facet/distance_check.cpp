@@ -7,7 +7,6 @@
 #include "uf_csys.h"
 #include "uf_mtx.h"
 
-#include <time.h>
 #include <vector>
 #include <assert.h>
 
@@ -20,6 +19,7 @@ struct coord_s
 };
 
 bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, double du[3], double dv[3], bool &FacetIsInFace);
+bool pointInPolygon(int polySides, double polyX[], double polyY[], double x, double y);
 
 // if run error return error code
 // if run well return 0
@@ -27,8 +27,10 @@ extern int CalcFaceFacetDistance(tag_t object_face, tag_t object_facet, double &
 {
 	assert(object_face != NULL_TAG);
 	assert(object_facet != NULL_TAG);
+	
+	int error_code = 0;
 
-	vector<coord_s> point_vector;  //定义点坐标容器
+	vector<coord_s> point_vector;  //定义点坐标容器（只记录有效点）
 	double dist_sqrt = 0.0;         //最小二乘距离
 	double vec2[3] = { 0.0,0.0,0.0 };  //uv生成点与其最近距离facet上点连线的方向向量
 
@@ -63,8 +65,8 @@ extern int CalcFaceFacetDistance(tag_t object_face, tag_t object_facet, double &
 			PosTemp.pos[2] = surf_eval.srf_pos[2];   //该点坐标
 
 			bool FacetIsInFace = false;
-			AskFacetIsInPoint(object_facet, PosTemp, surf_eval.srf_du, surf_eval.srf_dv, FacetIsInFace);
-			if (FacetIsInFace == true)
+			AskFacetIsInPoint(object_facet, PosTemp, surf_eval.srf_du, surf_eval.srf_dv, FacetIsInFace);  //判断点法线方向上是否有小平面体
+			if (FacetIsInFace == true)  //如果有效则记录
 			{
 				point_vector.push_back(PosTemp);   //储存该点信息
 			}
@@ -98,40 +100,68 @@ extern int CalcFaceFacetDistance(tag_t object_face, tag_t object_facet, double &
 
 	UF_EVALSF_free(&evaluator);  //清除指针
 
-	int error_code = 0;
 	return error_code;
 }
 
 bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, double du[3], double dv[3], bool &FacetIsInFace)
 {
-	tag_t csys_id = 0;
-	double matrix_values[9] = { 0 };
-	tag_t matrix_id = 0;
+	FacetIsInFace = false;
+
+	tag_t csys_id = 0;  //坐标系ID
+	double matrix_values[9] = { 0 }; //坐标系矩阵
+	tag_t matrix_id = 0;  //矩阵ID
 
 	double x_vec[3] = { du[0],du[1],du[2] };//X方向矢量
 	double y_vec[3] = { dv[0],dv[1],dv[2] };//Y方向矢量
 
 	UF_MTX3_initialize(x_vec, y_vec, matrix_values);
 	UF_CSYS_create_matrix(matrix_values, &matrix_id);
-	UF_CSYS_create_csys(pt.pos, matrix_id, &csys_id);
+	UF_CSYS_create_temp_csys(pt.pos, matrix_id, &csys_id);
 	UF_CSYS_set_wcs(csys_id);
 	
-	int numFacets = 0;
+	int numFacets = 0;  //记录小平面体个数
 	UF_FACET_ask_n_facets_in_model(object_facet, &numFacets);  //获取小平面体的个数
-	//for (int iLoop = 0; iLoop < numFacets; ++iLoop)
-	for (int iLoop = 0; iLoop < 1; ++iLoop)
+	for (int iLoop = 0; iLoop < numFacets; ++iLoop)
+	//for (int iLoop = 0; iLoop < 1; ++iLoop)  //调试用
 	{
-		int numVertices = 0;
-		double vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } };
+		int numVertices = 0;  //小平面体顶点数，也是多边形边数
+		double vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } }; //facet body顶点坐标
 
 		UF_FACET_ask_vertices_of_facet(object_facet, iLoop, &numVertices, vertices);
-		double map_vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } };
+		double map_vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } };//映射后顶点坐标
 
-		for (int jLoop = 0; jLoop < numVertices; jLoop++)
+		double polyX[6] = { 0 }; //记录多边形顶点x坐标
+		double polyY[6] = { 0 }; //记录多边形顶点y坐标
+		
+		for (int jLoop = 0; jLoop < numVertices; ++jLoop)
 		{
-			UF_CSYS_map_point(UF_CSYS_ROOT_COORDS, vertices[jLoop], UF_CSYS_ROOT_WCS_COORDS, map_vertices[jLoop]);
+			UF_CSYS_map_point(UF_CSYS_ROOT_COORDS, vertices[jLoop], UF_CSYS_ROOT_WCS_COORDS, map_vertices[jLoop]);  //映射到相对坐标系
+			polyX[jLoop] = map_vertices[jLoop][0];
+			polyY[jLoop] = map_vertices[jLoop][1];
+		}
+
+		FacetIsInFace = pointInPolygon(numVertices, polyX, polyY, 0.0, 0.0);  //测试点即原点(0,0)
+		if (FacetIsInFace == true)
+		{
+			break;   //如果点法线上方有小平面体，则停止循环，返回true
 		}
 	}
-	FacetIsInFace = true;
-	return true;
+	return FacetIsInFace;
 }
+
+bool pointInPolygon(int polySides, double polyX[], double polyY[], double x, double y)
+{
+	int   i, j = polySides - 1;
+	bool  oddNodes = false;
+
+	for (i = 0; i < polySides; i++)
+	{
+		if ((polyY[i] < y && polyY[j] >= y || polyY[j] < y && polyY[i] >= y) && (polyX[i] <= x || polyX[j] <= x))
+		{
+			oddNodes ^= (polyX[i] + (y - polyY[i]) / (polyY[j] - polyY[i])*(polyX[j] - polyX[i]) < x);
+		}
+		j = i;
+	}
+
+	return oddNodes;
+}  //判断点是否在多边形内

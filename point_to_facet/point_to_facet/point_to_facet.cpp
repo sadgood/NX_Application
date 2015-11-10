@@ -82,8 +82,8 @@ extern DllExport void ufusr(char *parm, int *returnCode, int rlen)
 
 	////////////////////////////////////////////////
 
-	time_t start = 0, stop = 0;
-	start = time(NULL);   //计时开始
+	clock_t start = 0, stop = 0;
+	start = clock();   //计时开始
 
 	char cue[] = "message";
 	char title[] = "select face";
@@ -115,7 +115,7 @@ extern DllExport void ufusr(char *parm, int *returnCode, int rlen)
 		UF_DISP_set_highlight(object_face, 0);
 	}
 
-	stop = time(NULL);   //计时结束
+	stop = clock();   //计时结束
 
 	char message[1024] = "";
 	
