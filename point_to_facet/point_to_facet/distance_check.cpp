@@ -129,7 +129,7 @@ bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, double du[3], double dv[3
 
 		for (int jLoop = 0; jLoop < numVertices; jLoop++)
 		{
-			UF_CSYS_map_point(UF_CSYS_ROOT_COORDS, vertices[jLoop], UF_CSYS_WORK_COORDS, map_vertices[jLoop]);
+			UF_CSYS_map_point(UF_CSYS_ROOT_COORDS, vertices[jLoop], UF_CSYS_ROOT_WCS_COORDS, map_vertices[jLoop]);
 		}
 	}
 	FacetIsInFace = true;
