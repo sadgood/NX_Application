@@ -18,8 +18,15 @@ struct coord_s
 	double vec1[3];
 };
 
-bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, double du[3], double dv[3], bool &FacetIsInFace);
+struct verticeStruct
+{
+    int numVertices;
+    double vertices[6][3]; //facet body顶点坐标
+};
+
+bool AskFacetIsInPoint(vector<verticeStruct> verticesData, coord_s pt, double du[3], double dv[3], bool &FacetIsInFace);
 bool pointInPolygon(int polySides, double polyX[], double polyY[], double x, double y);
+int CalcVericesOfFacet(tag_t object_facet, vector<verticeStruct> &verticesData);
 
 // if run error return error code
 // if run well return 0
@@ -29,6 +36,9 @@ extern int CalcFaceFacetDistance(tag_t object_face, tag_t object_facet, double &
 	assert(object_facet != NULL_TAG);
 	
 	int error_code = 0;
+
+    vector<verticeStruct> verticesData;  //记录所有facet body顶点信息
+    CalcVericesOfFacet(object_facet, verticesData);
 
 	vector<coord_s> point_vector;  //定义点坐标容器（只记录有效点）
 	double dist_sqrt = 0.0;         //最小二乘距离
@@ -65,7 +75,7 @@ extern int CalcFaceFacetDistance(tag_t object_face, tag_t object_facet, double &
 			PosTemp.pos[2] = surf_eval.srf_pos[2];   //该点坐标
 
 			bool FacetIsInFace = false;
-			AskFacetIsInPoint(object_facet, PosTemp, surf_eval.srf_du, surf_eval.srf_dv, FacetIsInFace);  //判断点法线方向上是否有小平面体
+			AskFacetIsInPoint(verticesData, PosTemp, surf_eval.srf_du, surf_eval.srf_dv, FacetIsInFace);  //判断点法线方向上是否有小平面体
 			if (FacetIsInFace == true)  //如果有效则记录
 			{
 				point_vector.push_back(PosTemp);   //储存该点信息
@@ -103,7 +113,7 @@ extern int CalcFaceFacetDistance(tag_t object_face, tag_t object_facet, double &
 	return error_code;
 }
 
-bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, double du[3], double dv[3], bool &FacetIsInFace)
+bool AskFacetIsInPoint(vector<verticeStruct> verticesData, coord_s pt, double du[3], double dv[3], bool &FacetIsInFace)
 {
 	FacetIsInFace = false;
 
@@ -119,28 +129,23 @@ bool AskFacetIsInPoint(tag_t object_facet, coord_s pt, double du[3], double dv[3
 	UF_CSYS_create_temp_csys(pt.pos, matrix_id, &csys_id);
 	UF_CSYS_set_wcs(csys_id);
 	
-	int numFacets = 0;  //记录小平面体个数
-	UF_FACET_ask_n_facets_in_model(object_facet, &numFacets);  //获取小平面体的个数
+    size_t numFacets = verticesData.size();
 	for (int iLoop = 0; iLoop < numFacets; ++iLoop)
 	//for (int iLoop = 0; iLoop < 1; ++iLoop)  //调试用
 	{
-		int numVertices = 0;  //小平面体顶点数，也是多边形边数
-		double vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } }; //facet body顶点坐标
-
-		UF_FACET_ask_vertices_of_facet(object_facet, iLoop, &numVertices, vertices);
 		double map_vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } };//映射后顶点坐标
 
 		double polyX[6] = { 0 }; //记录多边形顶点x坐标
 		double polyY[6] = { 0 }; //记录多边形顶点y坐标
 		
-		for (int jLoop = 0; jLoop < numVertices; ++jLoop)
+		for (int jLoop = 0; jLoop < verticesData[iLoop].numVertices; ++jLoop)
 		{
-			UF_CSYS_map_point(UF_CSYS_ROOT_COORDS, vertices[jLoop], UF_CSYS_ROOT_WCS_COORDS, map_vertices[jLoop]);  //映射到相对坐标系
+			UF_CSYS_map_point(UF_CSYS_ROOT_COORDS, verticesData[iLoop].vertices[jLoop], UF_CSYS_ROOT_WCS_COORDS, map_vertices[jLoop]);  //映射到相对坐标系
 			polyX[jLoop] = map_vertices[jLoop][0];
 			polyY[jLoop] = map_vertices[jLoop][1];
 		}
 
-		FacetIsInFace = pointInPolygon(numVertices, polyX, polyY, 0.0, 0.0);  //测试点即原点(0,0)
+		FacetIsInFace = pointInPolygon(verticesData[iLoop].numVertices, polyX, polyY, 0.0, 0.0);  //测试点即原点(0,0)
 		if (FacetIsInFace == true)
 		{
 			break;   //如果点法线上方有小平面体，则停止循环，返回true
@@ -165,3 +170,18 @@ bool pointInPolygon(int polySides, double polyX[], double polyY[], double x, dou
 
 	return oddNodes;
 }  //判断点是否在多边形内
+
+int CalcVericesOfFacet(tag_t object_facet, vector<verticeStruct> &verticesData)
+{
+    int numFacets = 0;  //记录小平面体个数
+    UF_FACET_ask_n_facets_in_model(object_facet, &numFacets);  //获取小平面体的个数
+    for (int iLoop = 0; iLoop < numFacets; ++iLoop)
+    {
+        int numVertices = 0;  //小平面体顶点数，也是多边形边数
+        double vertices[6][3] = { { 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 },{ 0.0, 0.0, 0.0 } }; //facet body顶点坐标
+        verticeStruct temp_vertices;
+        UF_FACET_ask_vertices_of_facet(object_facet, iLoop, &temp_vertices.numVertices, temp_vertices.vertices);
+        verticesData.push_back(temp_vertices);
+    }
+    return 1;
+}
