@@ -6,4 +6,8 @@
     <LocalDebuggerDebuggerType>NativeOnly</LocalDebuggerDebuggerType>
     <RemoteDebuggerAttach>false</RemoteDebuggerAttach>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommand>$(ugii_root_dir)\ugraf.exe</LocalDebuggerCommand>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>

@@ -104,7 +104,7 @@ extern DllExport void ufusr(char *parm, int *returnCode, int rlen)
 		double cursor_facet[3] = { 0.0,0.0,0.0 };
 
 		int errorCode_facet = 0;
-		errorCode_facet = UF_CALL(UF_UI_select_with_single_dialog(cue_facet, title_facet, UF_UI_SEL_SCOPE_WORK_PART, NULL, NULL, &response, &object_facet, cursor_facet, &view_facet));
+		errorCode_facet = UF_CALL(UF_UI_select_with_single_dialog(cue_facet, title_facet, UF_UI_SEL_SCOPE_WORK_PART, NULL, NULL, &response_facet, &object_facet, cursor_facet, &view_facet));
 	
 		if (object_facet != NULL_TAG)  //Ñ¡È¡ÇúÃæ
 		{
