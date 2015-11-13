@@ -100,12 +100,13 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 		for (int iLoop = 0; iLoop < 4; ++iLoop)
 		{
 			UF_UI_point_construct(cue, &base_method, &point_tag[iLoop], pt_coods[iLoop].base_pt, &response);
-		}
+		} //构建4个控制点
 
-		Create_Point(pt_coods, object_facet);
+		Create_Point(pt_coods, object_facet);   //建立余下的5个点，9个点均在facet body上
 
+		tag_t line[6] = { 0 };  //定义6条直线
 
-		Create_Line(pt_coods);
+		Create_Line(pt_coods, line);  //构建6条样条曲线
 		
 	}
 
