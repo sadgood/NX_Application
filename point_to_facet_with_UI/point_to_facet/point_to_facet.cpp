@@ -123,7 +123,7 @@ extern DllExport void ufusr(char *parm, int *returnCode, int rlen)
 	{
 		sprintf_s(message, 1024, "Time is %d ms\n", (int)stop - (int)start);
 		UF_UI_write_listing_window(message);
-		sprintf_s(message, 1024, "Minimum Distance is %f\n", averageDist);
+		sprintf_s(message, 1024, "Average Distance is %f\n", averageDist);
 		UF_UI_write_listing_window(message);
 	}
 
