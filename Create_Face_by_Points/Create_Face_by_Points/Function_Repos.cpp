@@ -70,9 +70,36 @@ extern int Create_Line(coord pt_coods[9], tag_t spline_tag[6])
 
 extern int Create_Face(tag_t line[6])
 {
-	UF_STRING_t s_prim = { 1 };
-	UF_STRING_t s_cross = { 1 };
-	UF_STRING_t s_spine = { 1 };
+	tag_t line_prim[3] = { 0 };
+	tag_t line_cross[3] = { 0 };
+
+	for (int iLoop = 0; iLoop < 3; ++iLoop)
+	{
+		line_prim[iLoop] = line[iLoop];
+		line_cross[iLoop] = line[iLoop + 3];
+	}
+
+	int dir[3] = { UF_MODL_CURVE_START_FROM_BEGIN, UF_MODL_CURVE_START_FROM_BEGIN ,UF_MODL_CURVE_START_FROM_BEGIN };
+	int string[3] = { 1 };
+
+	UF_STRING_t s_prim;
+	UF_MODL_init_string_list(&s_prim);
+	UF_MODL_create_string_list(3, 3, &s_prim);
+	s_prim.dir = dir;
+	s_prim.id = line_prim;
+	s_prim.string = string;
+
+	UF_STRING_t s_cross;
+	UF_MODL_init_string_list(&s_cross);
+	UF_MODL_create_string_list(3, 3, &s_cross);
+	s_cross.dir = dir;
+	s_cross.id = line_cross;
+	s_cross.string = string;
+
+	UF_STRING_t s_spine ;
+	UF_MODL_init_string_list(&s_spine);
+	UF_MODL_create_string_list(3, 3, &s_spine);
+
 	int  end_point = 0;
 	int  emphasis = 3;
 	int body_type = 0;
@@ -82,10 +109,6 @@ extern int Create_Face(tag_t line[6])
 	tag_t c_face_id[4] = { 0 };
 	int c_flag[4] = { 0 };
 	tag_t body_obj_id = 0;
-
-	s_prim.num = 3;
-
-
 
 
 	UF_MODL_create_curve_mesh(&s_prim, &s_cross, &s_spine, &end_point, &emphasis, &body_type, &spline_pts, boolean, tol, c_face_id, c_flag, &body_obj_id);
