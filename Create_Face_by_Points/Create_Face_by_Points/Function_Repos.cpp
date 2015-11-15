@@ -96,20 +96,19 @@ extern int Create_Face(tag_t line[6])
 	s_cross.id = line_cross;
 	s_cross.string = string;
 
-	UF_STRING_t s_spine ;
+	UF_STRING_t s_spine;
 	UF_MODL_init_string_list(&s_spine);
 	UF_MODL_create_string_list(3, 3, &s_spine);
 
-	int  end_point = 0;
-	int  emphasis = 3;
+	int end_point = 0;
+	int emphasis = 3;
 	int body_type = 0;
-	int  spline_pts = 0;
+	int spline_pts = 0;
 	UF_FEATURE_SIGN boolean = UF_NULLSIGN;
 	double tol[3] = { 0 };
 	tag_t c_face_id[4] = { 0 };
 	int c_flag[4] = { 0 };
 	tag_t body_obj_id = 0;
-
 
 	UF_MODL_create_curve_mesh(&s_prim, &s_cross, &s_spine, &end_point, &emphasis, &body_type, &spline_pts, boolean, tol, c_face_id, c_flag, &body_obj_id);
 
