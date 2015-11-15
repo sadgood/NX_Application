@@ -11,10 +11,10 @@
 #if ! defined ( __hp9000s800 ) && ! defined ( __sgi ) && ! defined ( __sun )
 #   include <strstream>
 #   include <iostream>
-    using std::ostrstream;
-    using std::endl;    
-    using std::ends;
-    using std::cerr;
+using std::ostrstream;
+using std::endl;
+using std::ends;
+using std::cerr;
 #else
 #   include <strstream.h>
 #   include <iostream.h>
@@ -28,34 +28,34 @@
 
 #define UF_CALL(X) (report_error( __FILE__, __LINE__, #X, (X)))
 
-static int report_error( char *file, int line, char *call, int irc)
+static int report_error(char *file, int line, char *call, int irc)
 {
-    if (irc)
-    {
-        char err[133],
-             msg[133];
+	if (irc)
+	{
+		char err[133],
+			msg[133];
 
-        sprintf(msg, "*** ERROR code %d at line %d in %s:\n+++ ",
-            irc, line, file);
-        UF_get_fail_message(irc, err);
+		sprintf(msg, "*** ERROR code %d at line %d in %s:\n+++ ",
+			irc, line, file);
+		UF_get_fail_message(irc, err);
 
-        UF_print_syslog(msg, FALSE);
-        UF_print_syslog(err, FALSE);
-        UF_print_syslog("\n", FALSE);
-        UF_print_syslog(call, FALSE);
-        UF_print_syslog(";\n", FALSE);
+		UF_print_syslog(msg, FALSE);
+		UF_print_syslog(err, FALSE);
+		UF_print_syslog("\n", FALSE);
+		UF_print_syslog(call, FALSE);
+		UF_print_syslog(";\n", FALSE);
 
-        if (!UF_UI_open_listing_window())
-        {
-            UF_UI_write_listing_window(msg);
-            UF_UI_write_listing_window(err);
-            UF_UI_write_listing_window("\n");
-            UF_UI_write_listing_window(call);
-            UF_UI_write_listing_window(";\n");
-        }
-    }
+		if (!UF_UI_open_listing_window())
+		{
+			UF_UI_write_listing_window(msg);
+			UF_UI_write_listing_window(err);
+			UF_UI_write_listing_window("\n");
+			UF_UI_write_listing_window(call);
+			UF_UI_write_listing_window(";\n");
+		}
+	}
 
-    return(irc);
+	return(irc);
 }
 
 
@@ -68,16 +68,16 @@ static int report_error( char *file, int line, char *call, int irc)
 
 
 
-extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
+extern DllExport void ufusr(char *parm, int *returnCode, int rlen)
 {
-    /* Initialize the API environment */
-    if( UF_CALL(UF_initialize()) ) 
-    {
-        /* Failed to initialize */
-        return;
-    }
-    
-    /* TODO: Add your application code here */
+	/* Initialize the API environment */
+	if (UF_CALL(UF_initialize()))
+	{
+		/* Failed to initialize */
+		return;
+	}
+
+	/* TODO: Add your application code here */
 
 	char cue_facet[] = "message";
 	char title_facet[] = "select facet";
@@ -88,7 +88,7 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 	int errorCode_facet = 0;
 	errorCode_facet = UF_CALL(UF_UI_select_with_single_dialog(cue_facet, title_facet, UF_UI_SEL_SCOPE_WORK_PART, NULL, NULL, &response_facet, &object_facet, cursor_facet, &view_facet));
 
-	if (object_facet != NULL_TAG)  //Ñ¡È¡facet body
+	if (object_facet != NULL_TAG)  //??facet body
 	{
 		UF_DISP_set_highlight(object_facet, 0);
 
@@ -100,22 +100,23 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 		for (int iLoop = 0; iLoop < 4; ++iLoop)
 		{
 			UF_UI_point_construct(cue, &base_method, &point_tag[iLoop], pt_coods[iLoop].base_pt, &response);
-		} //æž„å»º4ä¸ªæŽ§åˆ¶ç‚¹
+		} //¹¹½¨4¸ö¿ØÖÆµã
 
-		Create_Point(pt_coods, object_facet);   //å»ºç«‹ä½™ä¸‹çš„5ä¸ªç‚¹ï¼Œ9ä¸ªç‚¹å‡åœ¨facet bodyä¸Š
+		Create_Point(pt_coods, object_facet);   //½¨Á¢ÓàÏÂµÄ5¸öµã£¬9¸öµã¾ùÔÚfacet bodyÉÏ
 
-		tag_t line[6] = { 0 };  //å®šä¹‰6æ¡ç›´çº¿
+		tag_t line[6] = { 0 };  //¶¨Òå6ÌõÖ±Ïß
 
-		Create_Line(pt_coods, line);  //æž„å»º6æ¡æ ·æ¡æ›²çº¿
-		
+		Create_Line(pt_coods, line);  //¹¹½¨6ÌõÑùÌõÇúÏß
+
+		Create_Face(line); //¸ù¾ÝÇúÏßÍø¸ñÉú³ÉÇúÃæ
 	}
 
-	
 
 
-	
-    /* Terminate the API environment */
-    UF_CALL(UF_terminate());
+
+
+	/* Terminate the API environment */
+	UF_CALL(UF_terminate());
 }
 
 /*****************************************************************************
@@ -127,9 +128,9 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 **     If your application registers a callback (from a MenuScript item or a
 **     User Defined Object for example), this function MUST return
 **     "UF_UNLOAD_UG_TERMINATE". */
-extern int ufusr_ask_unload( void )
+extern int ufusr_ask_unload(void)
 {
-    return( UF_UNLOAD_IMMEDIATELY );
+	return(UF_UNLOAD_IMMEDIATELY);
 }
 
 static int SetFaceSelection(UF_UI_selection_p_t select, void* user_data)
