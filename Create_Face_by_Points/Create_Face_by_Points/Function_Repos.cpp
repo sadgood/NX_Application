@@ -68,7 +68,7 @@ extern int Create_Line(coord pt_coods[9], tag_t spline_tag[6])
 	return 0;
 }
 
-extern int Create_Face(tag_t line[6])
+extern int Create_Face(tag_t line[6], tag_t &body_obj_id)
 {
 	tag_t line_prim[3] = { 0 };
 	tag_t line_cross[3] = { 0 };
@@ -80,7 +80,7 @@ extern int Create_Face(tag_t line[6])
 	}
 
 	int dir[3] = { UF_MODL_CURVE_START_FROM_BEGIN, UF_MODL_CURVE_START_FROM_BEGIN ,UF_MODL_CURVE_START_FROM_BEGIN };
-	int string[3] = { 1 };
+	int string[3] = { 1,1,1 };
 
 	UF_STRING_t s_prim;
 	UF_MODL_init_string_list(&s_prim);
@@ -98,19 +98,20 @@ extern int Create_Face(tag_t line[6])
 
 	UF_STRING_t s_spine;
 	UF_MODL_init_string_list(&s_spine);
-	UF_MODL_create_string_list(3, 3, &s_spine);
+	UF_MODL_create_string_list(0, 0, &s_spine);
+	s_spine.num = 0;
 
 	int end_point = 0;
 	int emphasis = 3;
 	int body_type = 0;
 	int spline_pts = 0;
 	UF_FEATURE_SIGN boolean = UF_NULLSIGN;
-	double tol[3] = { 0 };
-	tag_t c_face_id[4] = { 0 };
-	int c_flag[4] = { 0 };
-	tag_t body_obj_id = 0;
+	double tols[] = { 0.001,0.001,0.05 };
 
-	UF_MODL_create_curve_mesh(&s_prim, &s_cross, &s_spine, &end_point, &emphasis, &body_type, &spline_pts, boolean, tol, c_face_id, c_flag, &body_obj_id);
+	tag_t c_face_id[4] = { NULL_TAG };
+	int c_flag[4] = { 0 };
+
+	UF_MODL_create_curve_mesh(&s_prim, &s_cross, &s_spine, &end_point, &emphasis, &body_type, &spline_pts, boolean, tols, c_face_id, c_flag, &body_obj_id);
 
 	return 0;
 }

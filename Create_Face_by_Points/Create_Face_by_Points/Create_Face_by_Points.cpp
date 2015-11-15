@@ -108,12 +108,9 @@ extern DllExport void ufusr(char *parm, int *returnCode, int rlen)
 
 		Create_Line(pt_coods, line);  //构建6条样条曲线
 
-		Create_Face(line); //根据曲线网格生成曲面
+		tag_t body_obj_id = NULL_TAG;
+		Create_Face(line, body_obj_id); //根据曲线网格生成曲面
 	}
-
-
-
-
 
 	/* Terminate the API environment */
 	UF_CALL(UF_terminate());
