@@ -1,6 +1,6 @@
 /*****************************************************************************
 **
-** NX8 Open Wizard1.cpp
+** NX8 Open Wizard3.cpp
 **
 ** Description:
 **     Contains Unigraphics entry points for the application.
@@ -10,9 +10,7 @@
 /* Include files */
 #if ! defined ( __hp9000s800 ) && ! defined ( __sgi ) && ! defined ( __sun )
 #   include <strstream>
-#include <tchar.h>
 #   include <iostream>
-#   include <windows.h>
     using std::ostrstream;
     using std::endl;    
     using std::ends;
@@ -25,13 +23,7 @@
 #include <uf_ui.h>
 #include <uf_exit.h>
 
-#include "testdll2.h"
-
-using namespace std;
-
 #define UF_CALL(X) (report_error( __FILE__, __LINE__, #X, (X)))
-
-
 
 static int report_error( char *file, int line, char *call, int irc)
 {
@@ -64,7 +56,6 @@ static int report_error( char *file, int line, char *call, int irc)
 }
 
 
-
 /*****************************************************************************
 **  Activation Methods
 *****************************************************************************/
@@ -74,13 +65,16 @@ static int report_error( char *file, int line, char *call, int irc)
 extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 {
     /* Initialize the API environment */
-	if (UF_CALL(UF_initialize())) return;
+    if( UF_CALL(UF_initialize()) ) 
+    {
+        /* Failed to initialize */
+        return;
+    }
+    
+    /* TODO: Add your application code here */
 
-	int A = puls(1, 2);
-	
-	uc1601("No active part", 1);
-
-	UF_terminate();
+    /* Terminate the API environment */
+    UF_CALL(UF_terminate());
 }
 
 /*****************************************************************************
