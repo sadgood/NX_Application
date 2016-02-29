@@ -157,6 +157,9 @@
   <ItemGroup>
     <ClCompile Include="Create_Face_by_Points_and_Optimize.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
