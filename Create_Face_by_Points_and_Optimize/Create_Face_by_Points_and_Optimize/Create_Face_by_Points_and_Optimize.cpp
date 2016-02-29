@@ -75,8 +75,8 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
     
     /* TODO: Add your application code here */
 
-	InitDialog thisDialog;
-	thisDialog.theUI->CreateDialog("InitDialog.dlx");
+	/*InitDialog thisDialog;
+	thisDialog.theUI->CreateDialog("InitDialog.dlx");*/
 
     /* Terminate the API environment */
     UF_CALL(UF_terminate());
