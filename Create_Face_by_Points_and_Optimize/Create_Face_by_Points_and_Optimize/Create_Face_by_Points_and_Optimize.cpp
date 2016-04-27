@@ -26,6 +26,7 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
         theDialog->AddFilterHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::filter_cb));
         theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
         theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
+
     }
     catch(exception& ex)
     {
@@ -154,7 +155,7 @@ void Create_Face_by_Points_and_Optimize::initialize_cb()
     try
     {
         group0 = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("group0"));
-        bodySelect0 = dynamic_cast<NXOpen::BlockStyler::BodyCollector*>(theDialog->TopBlock()->FindBlock("bodySelect0"));
+        selection0 = dynamic_cast<NXOpen::BlockStyler::SelectObject*>(theDialog->TopBlock()->FindBlock("selection0"));
         group = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("group"));
         point0 = dynamic_cast<NXOpen::BlockStyler::SpecifyPoint*>(theDialog->TopBlock()->FindBlock("point0"));
         point01 = dynamic_cast<NXOpen::BlockStyler::SpecifyPoint*>(theDialog->TopBlock()->FindBlock("point01"));
@@ -219,25 +220,30 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 {
     try
     {
-        if(block == bodySelect0)
+        if(block == selection0)
         {
         //---------Enter your code here-----------
         }
         else if(block == point0)
         {
         //---------Enter your code here-----------
+			tag_t point_tag = block->GetTag();
+			
         }
         else if(block == point01)
         {
         //---------Enter your code here-----------
+			tag_t point_tag = block->GetTag();
         }
         else if(block == point02)
         {
         //---------Enter your code here-----------
+			tag_t point_tag = block->GetTag();
         }
         else if(block == point03)
         {
         //---------Enter your code here-----------
+			tag_t point_tag = block->GetTag();
         }
         else if(block == enum0)
         {
