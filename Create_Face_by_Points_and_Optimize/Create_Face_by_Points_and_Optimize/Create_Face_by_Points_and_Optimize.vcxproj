@@ -156,9 +156,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Create_Face_by_Points_and_Optimize.cpp" />
-    <ClCompile Include="journal.cxx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CreatePoint.h" />
     <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
