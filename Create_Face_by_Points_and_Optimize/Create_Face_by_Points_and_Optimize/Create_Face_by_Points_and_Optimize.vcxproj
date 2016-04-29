@@ -155,6 +155,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CreatePoint.cpp" />
     <ClCompile Include="Create_Face_by_Points_and_Optimize.cpp" />
   </ItemGroup>
   <ItemGroup>
