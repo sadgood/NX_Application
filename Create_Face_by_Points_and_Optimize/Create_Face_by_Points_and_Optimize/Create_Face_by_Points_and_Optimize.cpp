@@ -263,30 +263,31 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
         if(block == point0)
         {
         //---------Enter your code here-----------
-			double coord[3] = { point0->Point().X, point0->Point().Y, point0->Point().Z };
-			pPointFeature1 = CreatePointFeature(coord);
         }
         else if(block == point01)
         {
         //---------Enter your code here-----------
-			double coord[3] = { point01->Point().X, point01->Point().Y, point01->Point().Z };
-			pPointFeature2 = CreatePointFeature(coord);
         }
         else if(block == point02)
         {
         //---------Enter your code here-----------
-			double coord[3] = { point02->Point().X, point02->Point().Y, point02->Point().Z };
-			pPointFeature3 = CreatePointFeature(coord);
         }
         else if(block == point03)
         {
         //---------Enter your code here-----------
-			double coord[3] = { point03->Point().X, point03->Point().Y, point03->Point().Z };
-			pPointFeature4 = CreatePointFeature(coord);
         }
         else if(block == button0)
         {
         //---------Enter your code here-----------
+			double coord1[3] = { point0->Point().X, point0->Point().Y, point0->Point().Z };
+			pPointFeature1 = CreatePointFeature(coord1);
+			double coord2[3] = { point01->Point().X, point01->Point().Y, point01->Point().Z };
+			pPointFeature2 = CreatePointFeature(coord2);
+			double coord3[3] = { point02->Point().X, point02->Point().Y, point02->Point().Z };
+			pPointFeature3 = CreatePointFeature(coord3);
+			double coord4[3] = { point03->Point().X, point03->Point().Y, point03->Point().Z };
+			pPointFeature4 = CreatePointFeature(coord4);
+
         }
         else if(block == enum0)
         {
