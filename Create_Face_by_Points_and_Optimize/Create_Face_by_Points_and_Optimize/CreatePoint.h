@@ -7,7 +7,17 @@
 #include <NXOpen/PointCollection.hxx>
 #include <NXOpen/Features_PointFeature.hxx>
 
+#include "uf_defs.h"
+#include "uf_modl.h"
+#include "uf_curve.h"
+
 using namespace std;
 using namespace NXOpen;
 
+struct coord
+{
+	double base_pt[3];
+};
+
 extern Features::PointFeature * CreatePointFeature(double coord[3]);
+extern int GetPointsCoord(coord pt_coods[9], tag_t object_facet);

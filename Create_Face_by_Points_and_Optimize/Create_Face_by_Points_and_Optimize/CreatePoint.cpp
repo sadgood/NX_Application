@@ -21,3 +21,42 @@ extern Features::PointFeature * CreatePointFeature(double coord[3])
 	thePointFeatureBuilder->Destroy();
 	return (Features::PointFeature*)theNXObject;
 }
+
+extern int GetPointsCoord(coord pt_coods[9], tag_t object_facet)
+{
+	coord pt_temp[5] = { 0 };
+	pt_temp[0].base_pt[0] = (pt_coods[0].base_pt[0] + pt_coods[1].base_pt[0]) / 2;
+	pt_temp[0].base_pt[1] = (pt_coods[0].base_pt[1] + pt_coods[1].base_pt[1]) / 2;
+	pt_temp[0].base_pt[2] = (pt_coods[0].base_pt[2] + pt_coods[1].base_pt[2]) / 2;
+
+	pt_temp[1].base_pt[0] = (pt_coods[1].base_pt[0] + pt_coods[2].base_pt[0]) / 2;
+	pt_temp[1].base_pt[1] = (pt_coods[1].base_pt[1] + pt_coods[2].base_pt[1]) / 2;
+	pt_temp[1].base_pt[2] = (pt_coods[1].base_pt[2] + pt_coods[2].base_pt[2]) / 2;
+
+	pt_temp[2].base_pt[0] = (pt_coods[2].base_pt[0] + pt_coods[3].base_pt[0]) / 2;
+	pt_temp[2].base_pt[1] = (pt_coods[2].base_pt[1] + pt_coods[3].base_pt[1]) / 2;
+	pt_temp[2].base_pt[2] = (pt_coods[2].base_pt[2] + pt_coods[3].base_pt[2]) / 2;
+
+	pt_temp[3].base_pt[0] = (pt_coods[3].base_pt[0] + pt_coods[0].base_pt[0]) / 2;
+	pt_temp[3].base_pt[1] = (pt_coods[3].base_pt[1] + pt_coods[0].base_pt[1]) / 2;
+	pt_temp[3].base_pt[2] = (pt_coods[3].base_pt[2] + pt_coods[0].base_pt[2]) / 2;
+
+	pt_temp[4].base_pt[0] = (pt_temp[0].base_pt[0] + pt_temp[2].base_pt[0]) / 2;
+	pt_temp[4].base_pt[1] = (pt_temp[0].base_pt[1] + pt_temp[2].base_pt[1]) / 2;
+	pt_temp[4].base_pt[2] = (pt_temp[0].base_pt[2] + pt_temp[2].base_pt[2]) / 2;   //获取选取的四个点的中点坐标，pt_coods[0-3]是手动选取的点的坐标
+
+	double guess2[3] = { 0.0,0.0,0.0 };
+	double min_dist = 0.0;   //最短距离
+	double pt_on_obj1[3] = { 0.0,0.0,0.0 };   //Minimum distance Point on object1（pt_temp）
+	double pt_on_obj2[3] = { 0.0,0.0,0.0 };   //Minimum distance Point on object2（object_facet）
+
+	for (int iLoop = 0; iLoop < 5; ++iLoop)
+	{
+		UF_MODL_ask_minimum_dist(NULL_TAG, object_facet, 1, pt_temp[iLoop].base_pt, 0, guess2, &min_dist, pt_on_obj1, pt_on_obj2);
+		pt_coods[iLoop + 4].base_pt[0] = pt_on_obj2[0];
+		pt_coods[iLoop + 4].base_pt[1] = pt_on_obj2[1];
+		pt_coods[iLoop + 4].base_pt[2] = pt_on_obj2[2];
+	}    //获取每个边的中点坐标到云点最近的点的坐标
+
+	return 0;
+}
