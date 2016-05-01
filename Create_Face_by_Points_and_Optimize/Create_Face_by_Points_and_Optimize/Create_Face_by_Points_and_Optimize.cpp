@@ -297,14 +297,9 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			pt_coods[3] = { point03->Point().X, point03->Point().Y, point03->Point().Z };
 			pPointFeature[3] = CreatePointFeature(pt_coods[3].base_pt);
 
-			PropertyList* propArray = selection0->GetProperties();
+			vector<TaggedObject*> Obj = selection0->GetSelectedObjects();
 
-			vector<NXString>allNames;
-			allNames = propArray->GetPropertyNames();
-
-			TaggedObject *facetBody1 = propArray->GetTaggedObject(allNames.at(20).GetText());
-
-			tag_t facetBody = NULL;
+			tag_t facetBody = Obj.at(0)->GetTag();
 			GetPointsCoord(pt_coods, facetBody);
 			for (int i = 4; i < 9; ++i)
 				pPointFeature[i] = CreatePointFeature(pt_coods[i].base_pt);
