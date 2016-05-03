@@ -135,7 +135,7 @@ private:
     NXOpen::BlockStyler::Button* button03;// Block type: Button
     
 private:
-	vector<vector<Features::PointFeature*> > pPointFeature;
+	vector<vector<Point*> > pPoint;
 	vector<vector<coord> > pt_coods;
 };
 #endif //CREATE_FACE_BY_POINTS_AND_OPTIMIZE_H_INCLUDED

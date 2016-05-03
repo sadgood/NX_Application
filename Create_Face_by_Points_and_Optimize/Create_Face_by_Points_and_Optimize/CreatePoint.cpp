@@ -33,7 +33,7 @@ static int report_error(char *file, int line, char *call, int irc)
 	return(irc);
 }
 
-extern Features::PointFeature * CreatePointFeature(double coord[3])
+extern Point* CreatePoint(double coord[3])
 {
 	Session *theSession = Session::GetSession();
 	Part *workPart(theSession->Parts()->Work());
@@ -42,17 +42,7 @@ extern Features::PointFeature * CreatePointFeature(double coord[3])
 	Point *thePoint = NULL;
 	thePoint = workPart->Points()->CreatePoint(coordinates);
 	thePoint->SetVisibility(SmartObject::VisibilityOptionVisible);
-
-	Features::Feature *nullFeatures_Feature(NULL);
-	Features::PointFeatureBuilder *thePointFeatureBuilder = NULL;
-	thePointFeatureBuilder = workPart->BaseFeatures()->CreatePointFeatureBuilder(nullFeatures_Feature);
-	thePointFeatureBuilder->SetPoint(thePoint);
-
-	NXObject *theNXObject = NULL;
-	theNXObject = thePointFeatureBuilder->Commit();
-
-	thePointFeatureBuilder->Destroy();
-	return (Features::PointFeature*)theNXObject;
+	return thePoint;
 }
 
 extern int GetPointsCoord(coord *pt_coods_selected, const tag_t &object_facet, vector<vector<coord> > &pt_coods)

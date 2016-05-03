@@ -64,14 +64,14 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
         theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
         theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
 
-		vector<Features::PointFeature*> temp;
+		vector<Point*> temp;
 		for (int i = 0; i < 3; ++i)
 		{
 			for (int j = 0; j < 3; ++j)
 			{
 				temp.push_back(NULL);
 			}
-			pPointFeature.push_back(temp);
+			pPoint.push_back(temp);
 			temp.clear();
 		}
 		vector<coord> temp1;
@@ -312,19 +312,21 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			pt_coods_selected[2] = { point02->Point().X, point02->Point().Y, point02->Point().Z };
 			pt_coods_selected[3] = { point03->Point().X, point03->Point().Y, point03->Point().Z };
 
-			vector<NXOpen::TaggedObject*> Obj;
+			std::vector<NXOpen::TaggedObject *> Obj;
 			Obj = selection0->GetSelectedObjects();
 			
 			tag_t facetBody = NULL_TAG;
 			facetBody = Obj.at(0)->GetTag();
+			//vector<NXOpen::TaggedObject *>().swap(Obj);
 			GetPointsCoord(pt_coods_selected, facetBody, pt_coods);
 			for (int i = 0; i < 3; ++i)
 			{
 				for (int j = 0; j < 3; ++j)
 				{
-					pPointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt);
+					pPoint[i][j] = CreatePoint(pt_coods[i][j].base_pt);
 				}
 			}
+			
         }
         else if(block == enum0)
         {

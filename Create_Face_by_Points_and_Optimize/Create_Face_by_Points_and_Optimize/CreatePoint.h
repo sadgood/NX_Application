@@ -21,5 +21,5 @@ struct coord
 	double base_pt[3];
 };
 
-extern Features::PointFeature * CreatePointFeature(double coord[3]);
+extern Point* CreatePoint(double coord[3]);
 extern int GetPointsCoord(coord *pt_coods_selected, const tag_t &object_facet, vector<vector<coord> > &pt_coods);
