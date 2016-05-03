@@ -298,9 +298,12 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			pPointFeature[3] = CreatePointFeature(pt_coods[3].base_pt);
 
 			vector<TaggedObject*> Obj = selection0->GetSelectedObjects();
-
-			tag_t facetBody = Obj.at(0)->GetTag();
-			GetPointsCoord(pt_coods, facetBody);
+			
+			tag_t facetBody_Feature = Obj.at(0)->GetTag();
+			tag_t **facetBody = NULL;
+			int FeatureNum = 0;
+			UF_MODL_ask_feat_object(facetBody_Feature, &FeatureNum, facetBody);
+			GetPointsCoord(pt_coods, facetBody[0][0]);
 			for (int i = 4; i < 9; ++i)
 				pPointFeature[i] = CreatePointFeature(pt_coods[i].base_pt);
 
