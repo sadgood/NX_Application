@@ -50,7 +50,8 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 {
     try
     {
-        // Initialize the NX Open C++ API environment
+		UF_initialize();
+		// Initialize the NX Open C++ API environment
         Create_Face_by_Points_and_Optimize::theSession = NXOpen::Session::GetSession();
         Create_Face_by_Points_and_Optimize::theUI = UI::GetUI();
         theDlxFileName = "Create_Face_by_Points_and_Optimize.dlx";
@@ -63,10 +64,26 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
         theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
         theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
 
-		for (int i = 0; i < 9; ++i)
-			pPointFeature[i] = NULL;
-		for (int i = 0; i < 9; ++i)
-			pt_coods[i] = { 0 };
+		vector<Features::PointFeature*> temp;
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				temp.push_back(NULL);
+			}
+			pPointFeature.push_back(temp);
+			temp.clear();
+		}
+		vector<coord> temp1;
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				temp1.push_back({0});
+			}
+			pt_coods.push_back(temp1);
+			temp1.clear();
+		}
     }
     catch(exception& ex)
     {
@@ -82,7 +99,8 @@ Create_Face_by_Points_and_Optimize::~Create_Face_by_Points_and_Optimize()
 {
     if (theDialog != NULL)
     {
-        delete theDialog;
+		UF_terminate();
+		delete theDialog;
         theDialog = NULL;
     }
 }
@@ -177,7 +195,8 @@ int Create_Face_by_Points_and_Optimize::Show()
     }
     catch(exception& ex)
     {
-        //---- Enter your exception handling code here -----
+ 
+		//---- Enter your exception handling code here -----
         Create_Face_by_Points_and_Optimize::theUI->NXMessageBox()->Show("Block Styler", NXOpen::NXMessageBox::DialogTypeError, ex.what());
     }
     return 0;
@@ -287,25 +306,25 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
         else if(block == button0)
         {
         //---------Enter your code here-----------
+			coord pt_coods_selected[4] = { 0 };
+			pt_coods_selected[0] = { point0->Point().X, point0->Point().Y, point0->Point().Z };
+			pt_coods_selected[1] = { point01->Point().X, point01->Point().Y, point01->Point().Z };
+			pt_coods_selected[2] = { point02->Point().X, point02->Point().Y, point02->Point().Z };
+			pt_coods_selected[3] = { point03->Point().X, point03->Point().Y, point03->Point().Z };
 
-			pt_coods[0] = { point0->Point().X, point0->Point().Y, point0->Point().Z };
-			pPointFeature[0] = CreatePointFeature(pt_coods[0].base_pt);
-			pt_coods[1] = { point01->Point().X, point01->Point().Y, point01->Point().Z };
-			pPointFeature[1] = CreatePointFeature(pt_coods[1].base_pt);
-			pt_coods[2] = { point02->Point().X, point02->Point().Y, point02->Point().Z };
-			pPointFeature[2] = CreatePointFeature(pt_coods[2].base_pt);
-			pt_coods[3] = { point03->Point().X, point03->Point().Y, point03->Point().Z };
-			pPointFeature[3] = CreatePointFeature(pt_coods[3].base_pt);
-
-			vector<TaggedObject*> Obj = selection0->GetSelectedObjects();
+			vector<NXOpen::TaggedObject*> Obj;
+			Obj = selection0->GetSelectedObjects();
 			
-			tag_t facetBody_Feature = Obj.at(0)->GetTag();
-			tag_t **facetBody = NULL;
-			int FeatureNum = 0;
-			UF_MODL_ask_feat_object(facetBody_Feature, &FeatureNum, facetBody);
-			GetPointsCoord(pt_coods, facetBody[0][0]);
-			for (int i = 4; i < 9; ++i)
-				pPointFeature[i] = CreatePointFeature(pt_coods[i].base_pt);
+			tag_t facetBody = NULL_TAG;
+			facetBody = Obj.at(0)->GetTag();
+			GetPointsCoord(pt_coods_selected, facetBody, pt_coods);
+			for (int i = 0; i < 3; ++i)
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					pPointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt);
+				}
+			}
         }
         else if(block == enum0)
         {

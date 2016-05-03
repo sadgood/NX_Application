@@ -19,6 +19,7 @@
 //------------------------------------------------------------------------------
 //These includes are needed for the following template code
 //------------------------------------------------------------------------------
+#include <uf.h>
 #include <uf_defs.h>
 #include <uf_ui_types.h>
 #include <iostream>
@@ -35,9 +36,11 @@
 #include <NXOpen/BlockStyler_SpecifyPoint.hxx>
 #include <NXOpen/BlockStyler_Button.hxx>
 #include <NXOpen/BlockStyler_Enumeration.hxx>
+#include <vector>
 
 #include "CreatePoint.h"
 
+using namespace std;
 //------------------------------------------------------------------------------
 //Bit Option for Property: SnapPointTypesEnabled
 //------------------------------------------------------------------------------
@@ -132,8 +135,7 @@ private:
     NXOpen::BlockStyler::Button* button03;// Block type: Button
     
 private:
-	Features::PointFeature *pPointFeature[9];
-	coord pt_coods[9];
-
+	vector<vector<Features::PointFeature*> > pPointFeature;
+	vector<vector<coord> > pt_coods;
 };
 #endif //CREATE_FACE_BY_POINTS_AND_OPTIMIZE_H_INCLUDED
