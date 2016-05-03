@@ -306,7 +306,6 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			GetPointsCoord(pt_coods, facetBody[0][0]);
 			for (int i = 4; i < 9; ++i)
 				pPointFeature[i] = CreatePointFeature(pt_coods[i].base_pt);
-
         }
         else if(block == enum0)
         {
