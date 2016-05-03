@@ -34,11 +34,6 @@
 #include <NXOpen/UnitCollection.hxx>
 using namespace NXOpen;
 
-extern "C" DllExport int ufusr_ask_unload()
-{
-    return (int)Session::LibraryUnloadOptionImmediately;
-}
-
 extern "C" DllExport void ufusr(char *param, int *retCode, int paramLen)
 {
     Session *theSession = Session::GetSession();
@@ -66,8 +61,6 @@ extern "C" DllExport void ufusr(char *param, int *retCode, int paramLen)
     plane1 = workPart->Planes()->CreatePlane(origin1, normal1, SmartObject::UpdateOptionWithinModeling);
     
     studioSplineBuilderEx1->SetDrawingPlane(plane1);
-    
-
     
     // ----------------------------------------------
     //   Dialog Begin Point
