@@ -1,39 +1,6 @@
-#include <uf.h>
-#include <uf_ui.h>
 #include "CreatePoint.h"
-#define UF_CALL(X) (report_error( __FILE__, __LINE__, #X, (X)))
 
-static int report_error(char *file, int line, char *call, int irc)
-{
-	if (irc)
-	{
-		char err[133],
-			msg[133];
-
-		sprintf(msg, "*** ERROR code %d at line %d in %s:\n+++ ",
-			irc, line, file);
-		UF_get_fail_message(irc, err);
-
-		UF_print_syslog(msg, FALSE);
-		UF_print_syslog(err, FALSE);
-		UF_print_syslog("\n", FALSE);
-		UF_print_syslog(call, FALSE);
-		UF_print_syslog(";\n", FALSE);
-
-		if (!UF_UI_open_listing_window())
-		{
-			UF_UI_write_listing_window(msg);
-			UF_UI_write_listing_window(err);
-			UF_UI_write_listing_window("\n");
-			UF_UI_write_listing_window(call);
-			UF_UI_write_listing_window(";\n");
-		}
-	}
-
-	return(irc);
-}
-
-extern Point* CreatePoint(double coord[3])
+extern Features::PointFeature * CreatePointFeature(double coord[3])
 {
 	Session *theSession = Session::GetSession();
 	Part *workPart(theSession->Parts()->Work());
@@ -42,7 +9,17 @@ extern Point* CreatePoint(double coord[3])
 	Point *thePoint = NULL;
 	thePoint = workPart->Points()->CreatePoint(coordinates);
 	thePoint->SetVisibility(SmartObject::VisibilityOptionVisible);
-	return thePoint;
+
+	Features::Feature *nullFeatures_Feature(NULL);
+	Features::PointFeatureBuilder *thePointFeatureBuilder = NULL;
+	thePointFeatureBuilder = workPart->BaseFeatures()->CreatePointFeatureBuilder(nullFeatures_Feature);
+	thePointFeatureBuilder->SetPoint(thePoint);
+
+	NXObject *theNXObject = NULL;
+	theNXObject = thePointFeatureBuilder->Commit();
+
+	thePointFeatureBuilder->Destroy();
+	return (Features::PointFeature*)theNXObject;
 }
 
 extern int GetPointsCoord(coord *pt_coods_selected, const tag_t &object_facet, vector<vector<coord> > &pt_coods)

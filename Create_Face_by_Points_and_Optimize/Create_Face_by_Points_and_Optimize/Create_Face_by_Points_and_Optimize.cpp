@@ -50,7 +50,7 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 {
     try
     {
-		UF_initialize();
+		UF_CALL(UF_initialize());
 		// Initialize the NX Open C++ API environment
         Create_Face_by_Points_and_Optimize::theSession = NXOpen::Session::GetSession();
         Create_Face_by_Points_and_Optimize::theUI = UI::GetUI();
@@ -64,14 +64,14 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
         theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
         theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
 
-		vector<Point*> temp;
+		vector<Features::PointFeature*> temp;
 		for (int i = 0; i < 3; ++i)
 		{
 			for (int j = 0; j < 3; ++j)
 			{
 				temp.push_back(NULL);
 			}
-			pPoint.push_back(temp);
+			pointFeature.push_back(temp);
 			temp.clear();
 		}
 		vector<coord> temp1;
@@ -99,7 +99,7 @@ Create_Face_by_Points_and_Optimize::~Create_Face_by_Points_and_Optimize()
 {
     if (theDialog != NULL)
     {
-		UF_terminate();
+		UF_CALL(UF_terminate());
 		delete theDialog;
         theDialog = NULL;
     }
@@ -312,21 +312,28 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			pt_coods_selected[2] = { point02->Point().X, point02->Point().Y, point02->Point().Z };
 			pt_coods_selected[3] = { point03->Point().X, point03->Point().Y, point03->Point().Z };
 
-			std::vector<NXOpen::TaggedObject *> Obj;
-			Obj = selection0->GetSelectedObjects();
-			
-			tag_t facetBody = NULL_TAG;
-			facetBody = Obj.at(0)->GetTag();
-			//vector<NXOpen::TaggedObject *>().swap(Obj);
-			GetPointsCoord(pt_coods_selected, facetBody, pt_coods);
-			for (int i = 0; i < 3; ++i)
+			try
 			{
-				for (int j = 0; j < 3; ++j)
+				std::vector<NXOpen::TaggedObject*> Obj;
+				Obj = selection0->GetSelectedObjects();
+				
+				tag_t facetBody = NULL_TAG;
+				if (!Obj.empty())
 				{
-					pPoint[i][j] = CreatePoint(pt_coods[i][j].base_pt);
+					TaggedObject *obj = NULL;
+					obj = Obj.at(0);
+					facetBody = obj->GetTag();
+					GetPointsCoord(pt_coods_selected, facetBody, pt_coods);
+					for (int i = 0; i < 3; ++i)
+						for (int j = 0; j < 3; ++j)
+							pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt);
+					for (int i = 0; i < 3; ++i)
+						CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);
+
+					group1->SetEnable(true);
 				}
 			}
-			
+			catch (exception& ex)	{}
         }
         else if(block == enum0)
         {
