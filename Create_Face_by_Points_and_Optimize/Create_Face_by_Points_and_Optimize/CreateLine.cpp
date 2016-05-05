@@ -10,12 +10,6 @@ extern Features::StudioSpline* CreateLine(Features::PointFeature *pointFeature1,
 	Features::StudioSplineBuilderEx *studioSplineBuilderEx1;
 	studioSplineBuilderEx1 = workPart->Features()->CreateStudioSplineBuilderEx(nullNXObject);
 
-	Point3d origin1(0.0, 0.0, 0.0);
-	Vector3d normal1(0.0, 0.0, 1.0);
-	/*Plane *plane1;
-	plane1 = workPart->Planes()->CreatePlane(origin1, normal1, SmartObject::UpdateOptionWithinModeling);
-	studioSplineBuilderEx1->SetDrawingPlane(plane1);*/
-
 	// ----------------------------------------------
 	//   Dialog Begin Point
 	// ----------------------------------------------    
