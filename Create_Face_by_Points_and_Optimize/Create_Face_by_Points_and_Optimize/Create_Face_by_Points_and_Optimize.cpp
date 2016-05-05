@@ -9,7 +9,7 @@
 //        Created by: zhaoz
 //              Version: NX 8.5
 //              Date: 05-05-2016  (Format: mm-dd-yyyy)
-//              Time: 13:55 (Format: hh-mm)
+//              Time: 16:40 (Format: hh-mm)
 //
 //==============================================================================
 
@@ -34,11 +34,9 @@
 //------------------------------------------------------------------------------
 //These includes are needed for the following template code
 //------------------------------------------------------------------------------
-#include <vector>
 #include "Create_Face_by_Points_and_Optimize.hpp"
 using namespace NXOpen;
 using namespace NXOpen::BlockStyler;
-using namespace std;
 
 //------------------------------------------------------------------------------
 // Initialize static variables
@@ -82,7 +80,7 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 		{
 			for (int j = 0; j < 3; ++j)
 			{
-				coord temp = {0.0,0.0,0.0};
+				coord temp = { 0.0,0.0,0.0 };
 				temp1.push_back(temp);
 			}
 			pt_coods.push_back(temp1);
@@ -229,14 +227,14 @@ void Create_Face_by_Points_and_Optimize::initialize_cb()
 {
     try
     {
+        tabControl = dynamic_cast<NXOpen::BlockStyler::TabControl*>(theDialog->TopBlock()->FindBlock("tabControl"));
+        tabPage = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("tabPage"));
         group = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("group"));
         group5 = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("group5"));
         selection0 = dynamic_cast<NXOpen::BlockStyler::SelectObject*>(theDialog->TopBlock()->FindBlock("selection0"));
         group6 = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("group6"));
         point0 = dynamic_cast<NXOpen::BlockStyler::SpecifyPoint*>(theDialog->TopBlock()->FindBlock("point0"));
         point01 = dynamic_cast<NXOpen::BlockStyler::SpecifyPoint*>(theDialog->TopBlock()->FindBlock("point01"));
-        point02 = dynamic_cast<NXOpen::BlockStyler::SpecifyPoint*>(theDialog->TopBlock()->FindBlock("point02"));
-        point03 = dynamic_cast<NXOpen::BlockStyler::SpecifyPoint*>(theDialog->TopBlock()->FindBlock("point03"));
         button0 = dynamic_cast<NXOpen::BlockStyler::Button*>(theDialog->TopBlock()->FindBlock("button0"));
         group1 = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("group1"));
         enum0 = dynamic_cast<NXOpen::BlockStyler::Enumeration*>(theDialog->TopBlock()->FindBlock("enum0"));
@@ -246,6 +244,7 @@ void Create_Face_by_Points_and_Optimize::initialize_cb()
         button02 = dynamic_cast<NXOpen::BlockStyler::Button*>(theDialog->TopBlock()->FindBlock("button02"));
         group3 = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("group3"));
         button03 = dynamic_cast<NXOpen::BlockStyler::Button*>(theDialog->TopBlock()->FindBlock("button03"));
+        tabPage1 = dynamic_cast<NXOpen::BlockStyler::Group*>(theDialog->TopBlock()->FindBlock("tabPage1"));
     }
     catch(exception& ex)
     {
@@ -307,14 +306,6 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
         //---------Enter your code here-----------
         }
         else if(block == point01)
-        {
-        //---------Enter your code here-----------
-        }
-        else if(block == point02)
-        {
-        //---------Enter your code here-----------
-        }
-        else if(block == point03)
         {
         //---------Enter your code here-----------
         }

@@ -9,7 +9,7 @@
 //        Created by: zhaoz
 //              Version: NX 8.5
 //              Date: 05-05-2016  (Format: mm-dd-yyyy)
-//              Time: 13:55
+//              Time: 16:40
 //
 //==============================================================================
 
@@ -30,6 +30,7 @@
 #include <NXOpen/BlockStyler_UIBlock.hxx>
 #include <NXOpen/BlockStyler_BlockDialog.hxx>
 #include <NXOpen/BlockStyler_PropertyList.hxx>
+#include <NXOpen/BlockStyler_TabControl.hxx>
 #include <NXOpen/BlockStyler_Group.hxx>
 #include <NXOpen/BlockStyler_SelectObject.hxx>
 #include <NXOpen/BlockStyler_SpecifyPoint.hxx>
@@ -115,14 +116,14 @@ public:
 private:
     const char* theDlxFileName;
     NXOpen::BlockStyler::BlockDialog* theDialog;
+    NXOpen::BlockStyler::TabControl* tabControl;// Block type: Tabs Page
+    NXOpen::BlockStyler::Group* tabPage;// Block type: Group
     NXOpen::BlockStyler::Group* group;// Block type: Group
     NXOpen::BlockStyler::Group* group5;// Block type: Group
     NXOpen::BlockStyler::SelectObject* selection0;// Block type: Selection
     NXOpen::BlockStyler::Group* group6;// Block type: Group
     NXOpen::BlockStyler::SpecifyPoint* point0;// Block type: Specify Point
     NXOpen::BlockStyler::SpecifyPoint* point01;// Block type: Specify Point
-    NXOpen::BlockStyler::SpecifyPoint* point02;// Block type: Specify Point
-    NXOpen::BlockStyler::SpecifyPoint* point03;// Block type: Specify Point
     NXOpen::BlockStyler::Button* button0;// Block type: Button
     NXOpen::BlockStyler::Group* group1;// Block type: Group
     NXOpen::BlockStyler::Enumeration* enum0;// Block type: Enumeration
@@ -132,6 +133,7 @@ private:
     NXOpen::BlockStyler::Button* button02;// Block type: Button
     NXOpen::BlockStyler::Group* group3;// Block type: Group
     NXOpen::BlockStyler::Button* button03;// Block type: Button
+    NXOpen::BlockStyler::Group* tabPage1;// Block type: Group
     
 private:
 	vector<vector<Features::PointFeature*> > pointFeature;
