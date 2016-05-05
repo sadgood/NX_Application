@@ -74,6 +74,7 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 			pointFeature.push_back(temp);
 			temp.clear();
 		}
+		
 		vector<coord> temp1;
 		for (int i = 0; i < 3; ++i)
 		{
@@ -83,6 +84,17 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 			}
 			pt_coods.push_back(temp1);
 			temp1.clear();
+		}
+
+		vector<Features::StudioSpline*> temp2;
+		for (int i = 0; i < 2; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				temp2.push_back(NULL);
+			}
+			studioSpline.push_back(temp2);
+			temp2.clear();
 		}
     }
     catch(exception& ex)
@@ -328,7 +340,9 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 						for (int j = 0; j < 3; ++j)
 							pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt);
 					for (int i = 0; i < 3; ++i)
-						CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);
+						studioSpline[0][i] = CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);
+					for (int i = 0; i < 3; ++i)
+						studioSpline[1][i] = CreateLine(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);
 
 					group1->SetEnable(true);
 				}

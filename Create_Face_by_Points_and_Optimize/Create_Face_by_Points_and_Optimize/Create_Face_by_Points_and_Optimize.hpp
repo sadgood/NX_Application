@@ -138,5 +138,6 @@ private:
 private:
 	vector<vector<Features::PointFeature*> > pointFeature;
 	vector<vector<coord> > pt_coods;
+	vector<vector<Features::StudioSpline*> > studioSpline;
 };
 #endif //CREATE_FACE_BY_POINTS_AND_OPTIMIZE_H_INCLUDED
