@@ -39,6 +39,7 @@
 #include <uf.h>
 #include "CreatePoint.h"
 #include "CreateLine.h"
+#include "CreateMesh.h"
 
 //------------------------------------------------------------------------------
 //Bit Option for Property: SnapPointTypesEnabled
@@ -136,5 +137,7 @@ private:
 	vector<vector<Features::PointFeature*> > pointFeature;
 	vector<vector<coord> > pt_coods;
 	vector<vector<Features::StudioSpline*> > studioSpline;
+	Features::ThroughCurveMesh* baseMesh;
+
 };
 #endif //CREATE_FACE_BY_POINTS_AND_OPTIMIZE_H_INCLUDED

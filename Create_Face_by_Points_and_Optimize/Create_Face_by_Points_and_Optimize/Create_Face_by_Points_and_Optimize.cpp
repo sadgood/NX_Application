@@ -99,6 +99,8 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 			studioSpline.push_back(temp2);
 			temp2.clear();
 		}
+
+		baseMesh = NULL;
     }
     catch(exception& ex)
     {
@@ -319,7 +321,7 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
         else if(block == button0)
         {
         //---------Enter your code here-----------
-			coord pt_coods_selected[4] = { 0.0,0.0,0.0 };
+			coord pt_coods_selected[4] = { 0 };
 			pt_coods_selected[0].base_pt[0] = point0->Point().X;
 			pt_coods_selected[0].base_pt[1] = point0->Point().Y;
 			pt_coods_selected[0].base_pt[2] = point0->Point().Z;
@@ -353,7 +355,7 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 					studioSpline[0][i] = CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);
 				for (int i = 0; i < 3; ++i)
 					studioSpline[1][i] = CreateLine(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);
-
+				baseMesh = CreateThroughCurveMesh(studioSpline);
 				group1->SetEnable(true);
 			}
         }
