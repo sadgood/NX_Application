@@ -155,12 +155,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CopyInstance.cpp" />
     <ClCompile Include="CreateLine.cpp" />
     <ClCompile Include="CreateMesh.cpp" />
     <ClCompile Include="CreatePoint.cpp" />
     <ClCompile Include="Create_Face_by_Points_and_Optimize.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CopyInstance.h" />
     <ClInclude Include="CreateLine.h" />
     <ClInclude Include="CreateMesh.h" />
     <ClInclude Include="CreatePoint.h" />

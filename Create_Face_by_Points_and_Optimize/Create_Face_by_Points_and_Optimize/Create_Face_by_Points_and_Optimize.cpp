@@ -321,13 +321,13 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			pt_coods_selected[1].base_pt[1] = point01->Point().Y;
 			pt_coods_selected[1].base_pt[2] = point01->Point().Z;
 
-			pt_coods_selected[2].base_pt[0] = point02->Point().X;
+	/*		pt_coods_selected[2].base_pt[0] = point02->Point().X;
 			pt_coods_selected[2].base_pt[1] = point02->Point().Y;
 			pt_coods_selected[2].base_pt[2] = point02->Point().Z;
 
 			pt_coods_selected[3].base_pt[0] = point03->Point().X;
 			pt_coods_selected[3].base_pt[1] = point03->Point().Y;
-			pt_coods_selected[3].base_pt[2] = point03->Point().Z;
+			pt_coods_selected[3].base_pt[2] = point03->Point().Z;*/
 
 			std::vector<NXOpen::TaggedObject*> selectedObjects;
 			selectedObjects = selection0->GetSelectedObjects();
