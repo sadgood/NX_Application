@@ -76,7 +76,7 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 		}
 
 		vector<coord> temp1;
-		for (int i = 0; i < 3; ++i)
+		for (int i = 0; i < 2; ++i)
 		{
 			for (int j = 0; j < 3; ++j)
 			{
@@ -321,13 +321,13 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			pt_coods_selected[1].base_pt[1] = point01->Point().Y;
 			pt_coods_selected[1].base_pt[2] = point01->Point().Z;
 
-	/*		pt_coods_selected[2].base_pt[0] = point02->Point().X;
-			pt_coods_selected[2].base_pt[1] = point02->Point().Y;
-			pt_coods_selected[2].base_pt[2] = point02->Point().Z;
+			pt_coods_selected[2].base_pt[0] = point01->Point().X;
+			pt_coods_selected[2].base_pt[1] = -1 * (point01->Point().Y);
+			pt_coods_selected[2].base_pt[2] = point01->Point().Z;
 
-			pt_coods_selected[3].base_pt[0] = point03->Point().X;
-			pt_coods_selected[3].base_pt[1] = point03->Point().Y;
-			pt_coods_selected[3].base_pt[2] = point03->Point().Z;*/
+			pt_coods_selected[3].base_pt[0] = point0->Point().X;
+			pt_coods_selected[3].base_pt[1] = -1 * (point0->Point().Y);
+			pt_coods_selected[3].base_pt[2] = point0->Point().Z;
 
 			std::vector<NXOpen::TaggedObject*> selectedObjects;
 			selectedObjects = selection0->GetSelectedObjects();
@@ -339,13 +339,19 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				obj = selectedObjects.at(0);
 				facetBody = obj->GetTag();
 				GetPointsCoord(pt_coods_selected, facetBody, pt_coods);
-				for (int i = 0; i < 3; ++i)
+
+				for (int i = 0; i < 2; ++i)
 					for (int j = 0; j < 3; ++j)
 						pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt);
+				pointFeature[2][0] = (Features::PointFeature*)CopyInstance(pointFeature[0][0]);
+				pointFeature[2][1] = (Features::PointFeature*)CopyInstance(pointFeature[0][1]);
+				pointFeature[2][2] = (Features::PointFeature*)CopyInstance(pointFeature[0][2]);
+
 				for (int i = 0; i < 3; ++i)
 					studioSpline[0][i] = CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);
 				for (int i = 0; i < 3; ++i)
 					studioSpline[1][i] = CreateLine(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);
+
 				baseMesh = CreateThroughCurveMesh(studioSpline);
 				group1->SetEnable(true);
 			}

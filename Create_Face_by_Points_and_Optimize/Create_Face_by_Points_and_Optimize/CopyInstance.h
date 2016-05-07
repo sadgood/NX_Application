@@ -13,4 +13,4 @@
 #include <NXOpen/ScRuleFactory.hxx>
 using namespace NXOpen;
 
-extern void CopyInstance();
+extern Features::Feature* CopyInstance(Features::Feature* Feature_init);
