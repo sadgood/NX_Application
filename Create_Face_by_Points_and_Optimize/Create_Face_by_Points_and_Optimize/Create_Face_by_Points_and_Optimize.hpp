@@ -142,6 +142,6 @@ private:
 	vector<vector<coord> > pt_coods;
 	vector<vector<Features::StudioSpline*> > studioSpline;
 	Features::ThroughCurveMesh* baseMesh;
-
+	vector<vector<Features::AssociativeLine*> > associativeLine;
 };
 #endif //CREATE_FACE_BY_POINTS_AND_OPTIMIZE_H_INCLUDED

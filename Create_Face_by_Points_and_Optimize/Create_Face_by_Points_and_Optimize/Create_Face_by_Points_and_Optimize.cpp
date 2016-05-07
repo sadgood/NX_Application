@@ -367,12 +367,32 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
         else if(block == button01)
         {
         //---------Enter your code here-----------
-			Features::AssociativeLine* A = CreateAssociativeLine(pointFeature[0][0], baseMesh);
-			int B = 0;
-        }
+			string Direction_U = enum0->ValueAsString().GetText();
+			string Direction_V = enum01->ValueAsString().GetText();
+			int direction_U = Direction_U[0] - '0';
+			int direction_V = Direction_V[0] - '0';
+			vector<Features::AssociativeLine*> temp;
+			for (int i = 0; i < direction_U; ++i)
+			{
+				for (int j = 0; j < direction_V; ++j)
+				{
+					temp.push_back(NULL);
+				}
+				associativeLine.push_back(temp);
+				temp.clear();
+			}
+
+			associativeLine[0][0] = CreateAssociativeLine(pointFeature[0][0], baseMesh);
+			associativeLine[0][direction_V - 1] = CreateAssociativeLine(pointFeature[0][2], baseMesh);
+			associativeLine[direction_U - 1][0] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[0][0]);
+			associativeLine[direction_U - 1][direction_V - 1] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[0][direction_V - 1]);
+        
+			group2->SetEnable(true);
+		}
         else if(block == button02)
         {
         //---------Enter your code here-----------
+			group3->SetEnable(true);
         }
         else if(block == button03)
         {
