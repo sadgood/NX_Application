@@ -33,6 +33,9 @@
     <ClCompile Include="CopyInstance.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CreateAssociativeLine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp">
@@ -48,6 +51,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CopyInstance.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateAssociativeLine.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

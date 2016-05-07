@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CopyInstance.cpp" />
+    <ClCompile Include="CreateAssociativeLine.cpp" />
     <ClCompile Include="CreateLine.cpp" />
     <ClCompile Include="CreateMesh.cpp" />
     <ClCompile Include="CreatePoint.cpp" />
@@ -163,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CopyInstance.h" />
+    <ClInclude Include="CreateAssociativeLine.h" />
     <ClInclude Include="CreateLine.h" />
     <ClInclude Include="CreateMesh.h" />
     <ClInclude Include="CreatePoint.h" />

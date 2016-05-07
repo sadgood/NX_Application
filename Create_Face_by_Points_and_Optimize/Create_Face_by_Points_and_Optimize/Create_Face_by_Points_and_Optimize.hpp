@@ -42,6 +42,7 @@
 #include "CreateLine.h"
 #include "CreateMesh.h"
 #include "CopyInstance.h"
+#include "CreateAssociativeLine.h"
 
 //------------------------------------------------------------------------------
 //Bit Option for Property: SnapPointTypesEnabled

@@ -367,6 +367,8 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
         else if(block == button01)
         {
         //---------Enter your code here-----------
+			Features::AssociativeLine* A = CreateAssociativeLine(pointFeature[0][0], baseMesh);
+			int B = 0;
         }
         else if(block == button02)
         {
