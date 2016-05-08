@@ -43,6 +43,7 @@
 #include "CreateMesh.h"
 #include "CopyInstance.h"
 #include "CreateAssociativeLine.h"
+#include "OffsetLine.h"
 
 //------------------------------------------------------------------------------
 //Bit Option for Property: SnapPointTypesEnabled
@@ -142,6 +143,7 @@ private:
 	vector<vector<coord> > pt_coods;//记录生成的点坐标（包括手动点上的两个点以及计算出的中点）
 	vector<vector<Features::StudioSpline*> > studioSpline;//记录根据点特征生成的样条曲线
 	Features::ThroughCurveMesh* baseMesh;//记录根据样条曲线生成的曲面
+	vector<Features::AOCSBuilder*> aoocsbuilder; //U方向生成的偏置曲线
 	vector<vector<Features::PointFeature*> > optimizationPointFeature;//根据uv方向设定的点数量，生成优化时使用的点特征
 	vector<vector<Features::AssociativeLine*> > associativeLine;//根据优化时使用的点特征生成的点-法线直线
 	

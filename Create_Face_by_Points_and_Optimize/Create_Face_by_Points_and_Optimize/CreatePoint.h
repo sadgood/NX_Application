@@ -6,6 +6,13 @@
 #include <NXOpen/Point.hxx>
 #include <NXOpen/PointCollection.hxx>
 #include <NXOpen/Features_PointFeature.hxx>
+#include <NXOpen/CurveCollection.hxx>
+#include <NXOpen/CurveDumbRule.hxx>
+#include <NXOpen/ScRuleFactory.hxx>
+#include <NXOpen/ScalarCollection.hxx>
+#include <NXOpen/SectionCollection.hxx>
+#include <NXOpen/Spline.hxx>
+#include <NXOpen/ExpressionCollection.hxx>
 #include <vector>
 
 #include "uf_defs.h"
@@ -55,4 +62,7 @@ static int report_error(char *file, int line, char *call, int irc)
 }
 
 extern Features::PointFeature * CreatePointFeature(double coord[3]);
+
 extern int GetPointsCoord(coord *pt_coods_selected, const tag_t &object_facet, vector<vector<coord> > &pt_coods);
+
+extern Features::PointFeature* CreatePointInCurves(Features::Feature *studioSpline1, double ratio);

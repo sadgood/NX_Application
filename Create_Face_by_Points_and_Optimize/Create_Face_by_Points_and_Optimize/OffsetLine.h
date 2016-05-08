@@ -14,4 +14,4 @@
 #include <NXOpen/Spline.hxx>
 using namespace NXOpen;
 
-extern void OffsetLine();
+extern Features::AOCSBuilder* OffsetLine(Features::StudioSpline *studioSpline1, Features::ThroughCurveMesh *throughCurveMesh1, double Distance);

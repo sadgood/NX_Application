@@ -387,6 +387,30 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				temp_point.clear();
 			}//根据控制线数量初始化UV方向上优化点和即将生成的点-法线直线
 
+			for (int i = 0; i < direction_U - 2; ++i)
+			{
+				aoocsbuilder.push_back(OffsetLine(studioSpline[1][0], baseMesh, -200 * (i + 1)));
+			}
+			
+			if (direction_V == 3)
+			{
+				CreatePointInCurves(studioSpline[1][0], 50);
+				for (int i = 0; i < direction_U - 2; ++i)
+				{
+					CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
+				}
+				CreatePointInCurves(studioSpline[1][2], 50);
+			}
+			else if(direction_V == 5)
+			{
+				CreatePointInCurves(studioSpline[1][0], 50);
+				for (int i = 0; i < direction_U - 2; ++i)
+				{
+					CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
+				}
+				CreatePointInCurves(studioSpline[1][2], 50);
+			}
+
 			associativeLine[0][0] = CreateAssociativeLine(pointFeature[0][0], baseMesh);
 			associativeLine[0][direction_V - 1] = CreateAssociativeLine(pointFeature[0][2], baseMesh);
 			associativeLine[direction_U - 1][0] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[0][0]);

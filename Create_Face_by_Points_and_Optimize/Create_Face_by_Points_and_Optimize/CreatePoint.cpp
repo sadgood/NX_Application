@@ -72,3 +72,66 @@ extern int GetPointsCoord(coord *pt_coods_selected, const tag_t &object_facet, v
 
 	return 0;
 }
+
+extern Features::PointFeature* CreatePointInCurves(Features::Feature *studioSpline1, double ratio)
+{
+	Session *theSession = Session::GetSession();
+	Part *workPart(theSession->Parts()->Work());
+
+	Section *section1;
+	section1 = workPart->Sections()->CreateSection(0.00095, 0.001, 0.05);
+
+	section1->SetAllowedEntityTypes(Section::AllowTypesOnlyCurves);
+
+	std::vector<IBaseCurve *> curves1(1);
+	Spline *spline1(dynamic_cast<Spline *>(studioSpline1->FindObject("CURVE 1")));
+	curves1[0] = spline1;
+	CurveDumbRule *curveDumbRule1;
+	curveDumbRule1 = workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves1);
+
+	section1->AllowSelfIntersection(false);
+
+	std::vector<SelectionIntentRule *> rules1(1);
+	rules1[0] = curveDumbRule1;
+	NXObject *nullNXObject(NULL);
+	Point3d helpPoint1(1005.13137827263, -251.775740702984, 675.25033335631);
+	section1->AddToSection(rules1, spline1, nullNXObject, nullNXObject, helpPoint1, Section::ModeCreate, false);
+
+	Unit *nullUnit(NULL);
+	Expression *expression1;
+	expression1 = workPart->Expressions()->CreateSystemExpressionWithUnits("0", nullUnit);
+	expression1->SetValue(ratio);
+
+	Scalar *scalar1;
+	scalar1 = workPart->Scalars()->CreateScalarExpression(expression1, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
+
+	Section *section2;
+	section2 = section1->CloneSection();
+
+	Curve *curve1;
+	curve1 = workPart->Curves()->CreateSmartCompositeCurve(section2, SmartObject::UpdateOptionWithinModeling, 0.00095);
+
+	Spline *spline2(dynamic_cast<Spline *>(curve1));
+	Point *point1;
+	point1 = workPart->Points()->CreatePoint(spline2, scalar1, PointCollection::PointOnCurveLocationOptionPercentArcLength, SmartObject::UpdateOptionWithinModeling);
+
+	section1->Clear();
+
+	section1->Destroy();
+
+	point1->SetVisibility(SmartObject::VisibilityOptionVisible);
+
+	Features::Feature *nullFeatures_Feature(NULL);
+
+	Features::PointFeatureBuilder *pointFeatureBuilder1;
+	pointFeatureBuilder1 = workPart->BaseFeatures()->CreatePointFeatureBuilder(nullFeatures_Feature);
+
+	pointFeatureBuilder1->SetPoint(point1);
+
+	NXObject *nXObject1;
+	nXObject1 = pointFeatureBuilder1->Commit();
+
+	pointFeatureBuilder1->Destroy();
+
+	return (Features::PointFeature*)nXObject1;
+}
