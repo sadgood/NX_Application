@@ -138,10 +138,12 @@ private:
     NXOpen::BlockStyler::Group* tabPage1;// Block type: Group
     
 private:
-	vector<vector<Features::PointFeature*> > pointFeature;
-	vector<vector<coord> > pt_coods;
-	vector<vector<Features::StudioSpline*> > studioSpline;
-	Features::ThroughCurveMesh* baseMesh;
-	vector<vector<Features::AssociativeLine*> > associativeLine;
+	vector<vector<Features::PointFeature*> > pointFeature; //记录生成的点特征（包括手动点上的两个点以及计算出的中点和镜像后的点）
+	vector<vector<coord> > pt_coods;//记录生成的点坐标（包括手动点上的两个点以及计算出的中点）
+	vector<vector<Features::StudioSpline*> > studioSpline;//记录根据点特征生成的样条曲线
+	Features::ThroughCurveMesh* baseMesh;//记录根据样条曲线生成的曲面
+	vector<vector<Features::PointFeature*> > optimizationPointFeature;//根据uv方向设定的点数量，生成优化时使用的点特征
+	vector<vector<Features::AssociativeLine*> > associativeLine;//根据优化时使用的点特征生成的点-法线直线
+	
 };
 #endif //CREATE_FACE_BY_POINTS_AND_OPTIMIZE_H_INCLUDED

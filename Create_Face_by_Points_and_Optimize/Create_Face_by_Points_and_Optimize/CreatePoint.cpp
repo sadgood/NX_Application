@@ -39,7 +39,7 @@ extern int GetPointsCoord(coord *pt_coods_selected, const tag_t &object_facet, v
 
 	pt_temp[2].base_pt[0] = (pt_temp[1].base_pt[0] + pt_temp[3].base_pt[0]) / 2;
 	pt_temp[2].base_pt[1] = (pt_temp[1].base_pt[1] + pt_temp[3].base_pt[1]) / 2;
-	pt_temp[2].base_pt[2] = (pt_temp[1].base_pt[2] + pt_temp[3].base_pt[2]) / 2;   //获取选取的四个点的中点坐标，pt_coods[0-3]是手动选取的点的坐标
+	pt_temp[2].base_pt[2] = (pt_temp[1].base_pt[2] + pt_temp[3].base_pt[2]) / 2;   
 
 	pt_coods[0][0] = pt_coods_selected[0];
 	pt_coods[0][2] = pt_coods_selected[1];

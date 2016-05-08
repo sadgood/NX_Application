@@ -319,7 +319,7 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 
 			pt_coods_selected[1].base_pt[0] = point01->Point().X;
 			pt_coods_selected[1].base_pt[1] = point01->Point().Y;
-			pt_coods_selected[1].base_pt[2] = point01->Point().Z;
+			pt_coods_selected[1].base_pt[2] = point01->Point().Z;  //选定点的坐标
 
 			pt_coods_selected[2].base_pt[0] = point01->Point().X;
 			pt_coods_selected[2].base_pt[1] = -1 * (point01->Point().Y);
@@ -327,18 +327,18 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 
 			pt_coods_selected[3].base_pt[0] = point0->Point().X;
 			pt_coods_selected[3].base_pt[1] = -1 * (point0->Point().Y);
-			pt_coods_selected[3].base_pt[2] = point0->Point().Z;
+			pt_coods_selected[3].base_pt[2] = point0->Point().Z; //根据选定点关于y轴对称的坐标
 
 			std::vector<NXOpen::TaggedObject*> selectedObjects;
-			selectedObjects = selection0->GetSelectedObjects();
+			selectedObjects = selection0->GetSelectedObjects(); 
 
 			tag_t facetBody = NULL_TAG;
 			if (!selectedObjects.empty())
 			{
 				TaggedObject *obj = NULL;
 				obj = selectedObjects.at(0);
-				facetBody = obj->GetTag();
-				GetPointsCoord(pt_coods_selected, facetBody, pt_coods);
+				facetBody = obj->GetTag();    //获取facetbody的tag值
+				GetPointsCoord(pt_coods_selected, facetBody, pt_coods);  //根据选定点和镜像点的坐标计算剩余5点坐标
 
 				for (int i = 0; i < 2; ++i)
 					for (int j = 0; j < 3; ++j)
@@ -348,11 +348,11 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				pointFeature[2][2] = (Features::PointFeature*)CopyInstance(pointFeature[0][2]);
 
 				for (int i = 0; i < 3; ++i)
-					studioSpline[0][i] = CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);
+					studioSpline[0][i] = CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);  //U方向三条线
 				for (int i = 0; i < 3; ++i)
-					studioSpline[1][i] = CreateLine(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);
+					studioSpline[1][i] = CreateLine(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);  //V方向三条线
 
-				baseMesh = CreateThroughCurveMesh(studioSpline);
+				baseMesh = CreateThroughCurveMesh(studioSpline);  //根据曲线网格生成曲面
 				group1->SetEnable(true);
 			}
         }
@@ -370,17 +370,22 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			string Direction_U = enum0->ValueAsString().GetText();
 			string Direction_V = enum01->ValueAsString().GetText();
 			int direction_U = Direction_U[0] - '0';
-			int direction_V = Direction_V[0] - '0';
+			int direction_V = Direction_V[0] - '0';   //获取UV方向控制线数量
+
 			vector<Features::AssociativeLine*> temp;
+			vector<Features::PointFeature*> temp_point;
 			for (int i = 0; i < direction_U; ++i)
 			{
 				for (int j = 0; j < direction_V; ++j)
 				{
-					temp.push_back(NULL);
+					temp.push_back(NULL); 
+					temp_point.push_back(NULL);
 				}
+				optimizationPointFeature.push_back(temp_point);
 				associativeLine.push_back(temp);
 				temp.clear();
-			}
+				temp_point.clear();
+			}//根据控制线数量初始化UV方向上优化点和即将生成的点-法线直线
 
 			associativeLine[0][0] = CreateAssociativeLine(pointFeature[0][0], baseMesh);
 			associativeLine[0][direction_V - 1] = CreateAssociativeLine(pointFeature[0][2], baseMesh);
