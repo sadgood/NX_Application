@@ -28,7 +28,7 @@ extern Features::AOCSBuilder* OffsetLine(Features::StudioSpline *studioSpline1, 
 
 	aOCSBuilder1->SetExtendMethod(Features::AOCSBuilder::ExtendWithinSection);
 
-	aOCSBuilder1->SetTrimToFaceEdgesOption(true);
+	aOCSBuilder1->SetTrimToFaceEdgesOption(false);
 
 	aOCSBuilder1->SetExtendToFaceOption(Features::AOCSBuilder::ExtendToFaceNone);
 

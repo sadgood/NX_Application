@@ -394,14 +394,29 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			
 			if (direction_V == 3)
 			{
-				CreatePointInCurves(studioSpline[1][0], 50);
+				optimizationPointFeature[0][0] = pointFeature[0][0];
+				optimizationPointFeature[direction_U - 1][0] = pointFeature[0][2];
+				optimizationPointFeature[0][1] = CreatePointInCurves(studioSpline[1][0], 50);
 				for (int i = 0; i < direction_U - 2; ++i)
 				{
-					CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
+					optimizationPointFeature[i + 1][0] = CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 0);
+					optimizationPointFeature[i + 1][1] = CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
 				}
-				CreatePointInCurves(studioSpline[1][2], 50);
+				optimizationPointFeature[direction_U - 1][1] = CreatePointInCurves(studioSpline[1][2], 50);
+
+				for (int i = 0; i < direction_U; ++i)
+				{
+					for (int j = 0; j < 2; ++j)
+					{
+						associativeLine[i][j] = CreateAssociativeLine(optimizationPointFeature[i][j], baseMesh);
+					}
+				}
+				for (int i = 0; i < direction_U; ++i)
+				{
+					associativeLine[i][2] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[i][0]);
+				}
 			}
-			else if(direction_V == 5)
+			/*else if(direction_V == 5)
 			{
 				CreatePointInCurves(studioSpline[1][0], 50);
 				for (int i = 0; i < direction_U - 2; ++i)
@@ -409,13 +424,8 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 					CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
 				}
 				CreatePointInCurves(studioSpline[1][2], 50);
-			}
+			}*/
 
-			associativeLine[0][0] = CreateAssociativeLine(pointFeature[0][0], baseMesh);
-			associativeLine[0][direction_V - 1] = CreateAssociativeLine(pointFeature[0][2], baseMesh);
-			associativeLine[direction_U - 1][0] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[0][0]);
-			associativeLine[direction_U - 1][direction_V - 1] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[0][direction_V - 1]);
-        
 			group2->SetEnable(true);
 		}
         else if(block == button02)
