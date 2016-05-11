@@ -61,7 +61,7 @@ static int report_error(char *file, int line, char *call, int irc)
 	return(irc);
 }
 
-extern Features::PointFeature * CreatePointFeature(double coord[3]);
+extern Features::PointFeature * CreatePointFeature(double coord[3], string pointName);
 
 extern int GetPointsCoord(coord *pt_coods_selected, const tag_t &object_facet, vector<vector<coord> > &pt_coods);
 

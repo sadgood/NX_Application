@@ -38,7 +38,8 @@ extern Features::AssociativeLine* CreateAssociativeLine(Features::PointFeature *
 
 	associativeLineBuilder1->Limits()->SetFullCircle(false);
 
-	Face *face1(dynamic_cast<Face *>(throughCurveMesh1->FindObject("FACE 10001 {(-31.0323630064268,26.0427359073581,0) THRU_CURVE_MESH(15)}")));
+	vector<Face*> faces = throughCurveMesh1->GetFaces();
+	Face *face1 = faces.at(0);
 	associativeLineBuilder1->EndNormal()->SetValue(face1);
 
 	associativeLineBuilder1->Limits()->EndLimit()->SetLimitOption(GeometricUtilities::CurveExtendData::LimitOptionsValue);

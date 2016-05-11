@@ -1,6 +1,6 @@
 #include "CreatePoint.h"
 
-extern Features::PointFeature * CreatePointFeature(double coord[3])
+extern Features::PointFeature * CreatePointFeature(double coord[3], string pointName)
 {
 	Session *theSession = Session::GetSession();
 	Part *workPart(theSession->Parts()->Work());

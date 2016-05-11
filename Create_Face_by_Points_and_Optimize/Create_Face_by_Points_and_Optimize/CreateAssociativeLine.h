@@ -12,6 +12,8 @@
 #include <NXOpen/PointCollection.hxx>
 #include <NXOpen/SelectDisplayableObject.hxx>
 #include <NXOpen/SelectPoint.hxx>
+#include <vector>
 using namespace NXOpen;
+using namespace std;
 
 extern Features::AssociativeLine* CreateAssociativeLine(Features::PointFeature *pointFeature1, Features::ThroughCurveMesh *throughCurveMesh1);

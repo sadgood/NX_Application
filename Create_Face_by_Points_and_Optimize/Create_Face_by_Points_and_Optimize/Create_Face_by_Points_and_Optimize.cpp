@@ -342,7 +342,7 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 
 				for (int i = 0; i < 2; ++i)
 					for (int j = 0; j < 3; ++j)
-						pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt);
+						pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt, "");
 				pointFeature[2][0] = (Features::PointFeature*)CopyInstance(pointFeature[0][0]);
 				pointFeature[2][1] = (Features::PointFeature*)CopyInstance(pointFeature[0][1]);
 				pointFeature[2][2] = (Features::PointFeature*)CopyInstance(pointFeature[0][2]);
