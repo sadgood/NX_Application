@@ -1,6 +1,6 @@
 #include "CreateMesh.h"
 
-extern Features::ThroughCurveMesh* CreateThroughCurveMesh(vector<vector<Features::studioSpline*> > studioSpline)
+extern Features::ThroughCurveMesh* CreateThroughCurveMesh(vector<vector<Features::StudioSpline*> > studioSpline)
 {
 	Session *theSession = Session::GetSession();
 	Part *workPart(theSession->Parts()->Work());
@@ -23,7 +23,7 @@ extern Features::ThroughCurveMesh* CreateThroughCurveMesh(vector<vector<Features
 	
 	std::vector<Features::Feature *> features1(1);
 	features1[0] = studioSpline[0][0];
-	Spline *spline1(dynamic_cast<Spline *>(studioSpline[0][0]->FindObject("CURVE 1")));
+	Spline *spline1(dynamic_cast<Spline*>(studioSpline[0][0]->FindObject("CURVE 1")));
 	Curve *nullCurve(NULL);
 	CurveFeatureTangentRule *curveFeatureTangentRule1;
 	curveFeatureTangentRule1 = workPart->ScRuleFactory()->CreateRuleCurveFeatureTangent(features1, spline1, nullCurve, false, 0.00095, 0.05);
