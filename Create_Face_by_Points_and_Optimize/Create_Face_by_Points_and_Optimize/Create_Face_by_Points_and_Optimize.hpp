@@ -44,6 +44,7 @@
 #include "CopyInstance.h"
 #include "CreateAssociativeLine.h"
 #include "OffsetLine.h"
+#include "IsoparametricCurves.h"
 
 //------------------------------------------------------------------------------
 //Bit Option for Property: SnapPointTypesEnabled
@@ -145,6 +146,7 @@ private:
 	Features::ThroughCurveMesh* baseMesh;//记录根据样条曲线生成的曲面
 	vector<Features::AOCSBuilder*> aoocsbuilder; //U方向生成的偏置曲线
 	vector<vector<Features::PointFeature*> > optimizationPointFeature;//根据uv方向设定的点数量，生成优化时使用的点特征
+	vector<Features::PointFeature*> UControlPoint;//U方向控制点，控制U方向上等参曲线的位置
 	vector<vector<Features::AssociativeLine*> > associativeLine;//根据优化时使用的点特征生成的点-法线直线
 	
 };

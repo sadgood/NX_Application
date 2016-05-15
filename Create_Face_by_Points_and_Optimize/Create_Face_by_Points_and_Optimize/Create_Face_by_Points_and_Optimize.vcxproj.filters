@@ -39,6 +39,9 @@
     <ClCompile Include="OffsetLine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="IsoparametricCurves.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp">
@@ -60,6 +63,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="OffsetLine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IsoparametricCurves.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

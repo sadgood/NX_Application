@@ -161,6 +161,7 @@
     <ClCompile Include="CreateMesh.cpp" />
     <ClCompile Include="CreatePoint.cpp" />
     <ClCompile Include="Create_Face_by_Points_and_Optimize.cpp" />
+    <ClCompile Include="IsoparametricCurves.cpp" />
     <ClCompile Include="OffsetLine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="CreateMesh.h" />
     <ClInclude Include="CreatePoint.h" />
     <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp" />
+    <ClInclude Include="IsoparametricCurves.h" />
     <ClInclude Include="OffsetLine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

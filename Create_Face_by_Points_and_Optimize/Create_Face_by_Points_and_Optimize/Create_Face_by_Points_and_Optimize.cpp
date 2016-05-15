@@ -387,9 +387,10 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				temp_point.clear();
 			}//根据控制线数量初始化UV方向上优化点和即将生成的点-法线直线
 
+			int percent = 100 / (direction_U - 2 + 1);
 			for (int i = 0; i < direction_U - 2; ++i)
 			{
-				aoocsbuilder.push_back(OffsetLine(studioSpline[1][0], baseMesh, -200 * (i + 1)));
+				UControlPoint.push_back(CreatePointInCurves((Features::Feature*)studioSpline[0][1], percent * (i + 1)));
 			}
 			
 			if (direction_V == 3)
@@ -399,8 +400,9 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				optimizationPointFeature[0][1] = CreatePointInCurves(studioSpline[1][0], 50);
 				for (int i = 0; i < direction_U - 2; ++i)
 				{
-					optimizationPointFeature[i + 1][0] = CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 0);
-					optimizationPointFeature[i + 1][1] = CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
+					IsoparametricCurvesOnFace(baseMesh, UControlPoint[i]);
+					//optimizationPointFeature[i + 1][0] = CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 0);
+					//optimizationPointFeature[i + 1][1] = CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
 				}
 				optimizationPointFeature[direction_U - 1][1] = CreatePointInCurves(studioSpline[1][2], 50);
 
@@ -408,12 +410,12 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				{
 					for (int j = 0; j < 2; ++j)
 					{
-						associativeLine[i][j] = CreateAssociativeLine(optimizationPointFeature[i][j], baseMesh);
+						//associativeLine[i][j] = CreateAssociativeLine(optimizationPointFeature[i][j], baseMesh);
 					}
 				}
 				for (int i = 0; i < direction_U; ++i)
 				{
-					associativeLine[i][2] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[i][0]);
+					//associativeLine[i][2] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[i][0]);
 				}
 			}
 			/*else if(direction_V == 5)
