@@ -1,6 +1,6 @@
 #include "IsoparametricCurves.h"
 
-extern void IsoparametricCurvesOnFace(Features::ThroughCurveMesh *throughCurveMesh, Features::PointFeature *pointFeature)
+extern Features::IsoparametricCurves * IsoparametricCurvesOnFace(Features::ThroughCurveMesh *throughCurveMesh, Features::PointFeature *pointFeature)
 {
 	Session *theSession = Session::GetSession();
 	Part *workPart(theSession->Parts()->Work());
@@ -61,7 +61,7 @@ extern void IsoparametricCurvesOnFace(Features::ThroughCurveMesh *throughCurveMe
 	nXObject1 = isoparametricCurvesBuilder1->Commit();
 
 	isoparametricCurvesBuilder1->Destroy();
-
+	return (Features::IsoparametricCurves *)nXObject1;
 	// ----------------------------------------------
 	//   Menu: Tools->Journal->Stop Recording
 	// ----------------------------------------------

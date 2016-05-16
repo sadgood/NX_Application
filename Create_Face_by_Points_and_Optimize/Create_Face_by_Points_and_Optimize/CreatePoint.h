@@ -13,8 +13,12 @@
 #include <NXOpen/SectionCollection.hxx>
 #include <NXOpen/Spline.hxx>
 #include <NXOpen/ExpressionCollection.hxx>
+#include <NXOpen/Unit.hxx>
+#include <NXOpen/UnitCollection.hxx>
 #include <vector>
-
+#include <stdio.h>
+#include <string>
+#include <stdlib.h>
 #include "uf_defs.h"
 #include "uf_modl.h"
 #include "uf_curve.h"
