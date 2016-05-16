@@ -1,6 +1,6 @@
 #include "CreatePoint.h"
 
-extern Features::PointFeature * CreatePointFeature(double coord[3], string pointTag, string &PointName)
+extern Features::PointFeature * CreatePointFeature(const double coord[3], const string &pointTag, string &PointName)
 {
 	Session *theSession = Session::GetSession();
 	Part *workPart(theSession->Parts()->Work());
@@ -16,27 +16,30 @@ extern Features::PointFeature * CreatePointFeature(double coord[3], string point
 	coord_str[1] = coord_str2;
 	coord_str[2] = coord_str3;
 
-	int timeNow = system("time");
+	int timeNow = clock();
 	char temp[20] = "";
 	sprintf_s(temp, "%d", timeNow);
 	string TimeNow = temp;
+
+	PointName = pointTag + "_" + TimeNow;
+
 	Point *thePoint = NULL;
 
 	Unit *unit1(dynamic_cast<Unit *>(workPart->UnitCollection()->FindObject("MilliMeter")));
 	Expression *expression1;
-	expression1 = workPart->Expressions()->CreateSystemExpressionWithUnits(pointTag + "_" + TimeNow + "_x=" + coord_str[0], unit1);
+	expression1 = workPart->Expressions()->CreateSystemExpressionWithUnits(PointName + "_x=" + coord_str[0], unit1);
 
 	Scalar *scalar1;
 	scalar1 = workPart->Scalars()->CreateScalarExpression(expression1, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
 
 	Expression *expression2;
-	expression2 = workPart->Expressions()->CreateSystemExpressionWithUnits(pointTag + "_" + TimeNow + "_y=" + coord_str[1], unit1);
+	expression2 = workPart->Expressions()->CreateSystemExpressionWithUnits(PointName + "_y=" + coord_str[1], unit1);
 
 	Scalar *scalar2;
 	scalar2 = workPart->Scalars()->CreateScalarExpression(expression2, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
 
 	Expression *expression3;
-	expression3 = workPart->Expressions()->CreateSystemExpressionWithUnits(pointTag + "_" + TimeNow + "_z=" + coord_str[2], unit1);
+	expression3 = workPart->Expressions()->CreateSystemExpressionWithUnits(PointName + "_z=" + coord_str[2], unit1);
 
 	Scalar *scalar3;
 	scalar3 = workPart->Scalars()->CreateScalarExpression(expression3, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);

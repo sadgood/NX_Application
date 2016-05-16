@@ -18,7 +18,7 @@
 #include <vector>
 #include <stdio.h>
 #include <string>
-#include <stdlib.h>
+#include <time.h> 
 #include "uf_defs.h"
 #include "uf_modl.h"
 #include "uf_curve.h"
@@ -65,7 +65,7 @@ static int report_error(char *file, int line, char *call, int irc)
 	return(irc);
 }
 
-extern Features::PointFeature * CreatePointFeature(double coord[3], string pointName);
+extern Features::PointFeature * CreatePointFeature(const double coord[3], const string &pointTag, string &PointName);
 
 extern int GetPointsCoord(coord *pt_coods_selected, const tag_t &object_facet, vector<vector<coord> > &pt_coods);
 

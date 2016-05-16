@@ -51,18 +51,18 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
     try
     {
 		UF_CALL(UF_initialize());
-        // Initialize the NX Open C++ API environment
-        Create_Face_by_Points_and_Optimize::theSession = NXOpen::Session::GetSession();
-        Create_Face_by_Points_and_Optimize::theUI = UI::GetUI();
-        theDlxFileName = "Create_Face_by_Points_and_Optimize.dlx";
-        theDialog = Create_Face_by_Points_and_Optimize::theUI->CreateDialog(theDlxFileName);
-        // Registration of callback functions
-        theDialog->AddApplyHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::apply_cb));
-        theDialog->AddOkHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::ok_cb));
-        theDialog->AddUpdateHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::update_cb));
-        theDialog->AddFilterHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::filter_cb));
-        theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
-        theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
+		// Initialize the NX Open C++ API environment
+		Create_Face_by_Points_and_Optimize::theSession = NXOpen::Session::GetSession();
+		Create_Face_by_Points_and_Optimize::theUI = UI::GetUI();
+		theDlxFileName = "Create_Face_by_Points_and_Optimize.dlx";
+		theDialog = Create_Face_by_Points_and_Optimize::theUI->CreateDialog(theDlxFileName);
+		// Registration of callback functions
+		theDialog->AddApplyHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::apply_cb));
+		theDialog->AddOkHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::ok_cb));
+		theDialog->AddUpdateHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::update_cb));
+		theDialog->AddFilterHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::filter_cb));
+		theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
+		theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
 
 		vector<Features::PointFeature*> temp;
 		for (int i = 0; i < 3; ++i)
@@ -342,7 +342,10 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 
 				for (int i = 0; i < 2; ++i)
 					for (int j = 0; j < 3; ++j)
-						pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt, "");
+					{
+						string temp;
+						pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt, "Point", temp);
+					}
 				pointFeature[2][0] = (Features::PointFeature*)CopyInstance(pointFeature[0][0]);
 				pointFeature[2][1] = (Features::PointFeature*)CopyInstance(pointFeature[0][1]);
 				pointFeature[2][2] = (Features::PointFeature*)CopyInstance(pointFeature[0][2]);
