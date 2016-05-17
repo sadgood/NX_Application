@@ -20,4 +20,4 @@
 using namespace NXOpen;
 using namespace std;
 
-extern void IsoparametricCurvesOnFace(Features::ThroughCurveMesh *throughCurveMesh, Features::PointFeature *pointFeature);
+extern Features::IsoparametricCurves * IsoparametricCurvesOnFace(Features::ThroughCurveMesh *throughCurveMesh, Features::PointFeature *pointFeature);

@@ -1,13 +1,50 @@
 #include "CreatePoint.h"
 
-extern Features::PointFeature * CreatePointFeature(double coord[3], string pointName)
+extern Features::PointFeature * CreatePointFeature(const double coord[3], const string &pointTag, string &PointName)
 {
 	Session *theSession = Session::GetSession();
 	Part *workPart(theSession->Parts()->Work());
 
-	Point3d coordinates(coord[0], coord[1], coord[2]);
+	char coord_str1[20] = "";
+	char coord_str2[20] = "";
+	char coord_str3[20] = "";
+	sprintf_s(coord_str1, "%f", coord[0]);
+	sprintf_s(coord_str2, "%f", coord[1]);
+	sprintf_s(coord_str3, "%f", coord[2]);
+	string coord_str[3];
+	coord_str[0] = coord_str1;
+	coord_str[1] = coord_str2;
+	coord_str[2] = coord_str3;
+
+	int timeNow = clock();
+	char temp[20] = "";
+	sprintf_s(temp, "%d", timeNow);
+	string TimeNow = temp;
+
+	PointName = pointTag + "_" + TimeNow;
+
 	Point *thePoint = NULL;
-	thePoint = workPart->Points()->CreatePoint(coordinates);
+
+	Unit *unit1(dynamic_cast<Unit *>(workPart->UnitCollection()->FindObject("MilliMeter")));
+	Expression *expression1;
+	expression1 = workPart->Expressions()->CreateSystemExpressionWithUnits(PointName + "_x=" + coord_str[0], unit1);
+
+	Scalar *scalar1;
+	scalar1 = workPart->Scalars()->CreateScalarExpression(expression1, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
+
+	Expression *expression2;
+	expression2 = workPart->Expressions()->CreateSystemExpressionWithUnits(PointName + "_y=" + coord_str[1], unit1);
+
+	Scalar *scalar2;
+	scalar2 = workPart->Scalars()->CreateScalarExpression(expression2, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
+
+	Expression *expression3;
+	expression3 = workPart->Expressions()->CreateSystemExpressionWithUnits(PointName + "_z=" + coord_str[2], unit1);
+
+	Scalar *scalar3;
+	scalar3 = workPart->Scalars()->CreateScalarExpression(expression3, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
+
+	thePoint = workPart->Points()->CreatePoint(scalar1, scalar2, scalar3, SmartObject::UpdateOptionWithinModeling);
 	thePoint->SetVisibility(SmartObject::VisibilityOptionVisible);
 
 	Features::Feature *nullFeatures_Feature(NULL);

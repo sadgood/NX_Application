@@ -51,18 +51,18 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
     try
     {
 		UF_CALL(UF_initialize());
-        // Initialize the NX Open C++ API environment
-        Create_Face_by_Points_and_Optimize::theSession = NXOpen::Session::GetSession();
-        Create_Face_by_Points_and_Optimize::theUI = UI::GetUI();
-        theDlxFileName = "Create_Face_by_Points_and_Optimize.dlx";
-        theDialog = Create_Face_by_Points_and_Optimize::theUI->CreateDialog(theDlxFileName);
-        // Registration of callback functions
-        theDialog->AddApplyHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::apply_cb));
-        theDialog->AddOkHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::ok_cb));
-        theDialog->AddUpdateHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::update_cb));
-        theDialog->AddFilterHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::filter_cb));
-        theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
-        theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
+		// Initialize the NX Open C++ API environment
+		Create_Face_by_Points_and_Optimize::theSession = NXOpen::Session::GetSession();
+		Create_Face_by_Points_and_Optimize::theUI = UI::GetUI();
+		theDlxFileName = "Create_Face_by_Points_and_Optimize.dlx";
+		theDialog = Create_Face_by_Points_and_Optimize::theUI->CreateDialog(theDlxFileName);
+		// Registration of callback functions
+		theDialog->AddApplyHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::apply_cb));
+		theDialog->AddOkHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::ok_cb));
+		theDialog->AddUpdateHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::update_cb));
+		theDialog->AddFilterHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::filter_cb));
+		theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
+		theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
 
 		vector<Features::PointFeature*> temp;
 		for (int i = 0; i < 3; ++i)
@@ -342,15 +342,18 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 
 				for (int i = 0; i < 2; ++i)
 					for (int j = 0; j < 3; ++j)
-						pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt, "");
+					{
+						string temp;
+						pointFeature[i][j] = CreatePointFeature(pt_coods[i][j].base_pt, "Point", temp);
+					}
 				pointFeature[2][0] = (Features::PointFeature*)CopyInstance(pointFeature[0][0]);
 				pointFeature[2][1] = (Features::PointFeature*)CopyInstance(pointFeature[0][1]);
 				pointFeature[2][2] = (Features::PointFeature*)CopyInstance(pointFeature[0][2]);
 
 				for (int i = 0; i < 3; ++i)
-					studioSpline[0][i] = CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);  //U方向三条线
+					studioSpline[0][i] = CreateStudioSplineByPoints(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);  //U方向三条线
 				for (int i = 0; i < 3; ++i)
-					studioSpline[1][i] = CreateLine(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);  //V方向三条线
+					studioSpline[1][i] = CreateStudioSplineByPoints(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);  //V方向三条线
 
 				baseMesh = CreateThroughCurveMesh(studioSpline);  //根据曲线网格生成曲面
 				group1->SetEnable(true);
@@ -391,6 +394,7 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			for (int i = 0; i < direction_U - 2; ++i)
 			{
 				UControlPoint.push_back(CreatePointInCurves((Features::Feature*)studioSpline[0][1], percent * (i + 1)));
+				IsoParametricCurves.push_back(IsoparametricCurvesOnFace(baseMesh, UControlPoint[i]));
 			}
 			
 			if (direction_V == 3)
@@ -400,33 +404,25 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				optimizationPointFeature[0][1] = CreatePointInCurves(studioSpline[1][0], 50);
 				for (int i = 0; i < direction_U - 2; ++i)
 				{
-					IsoparametricCurvesOnFace(baseMesh, UControlPoint[i]);
-					//optimizationPointFeature[i + 1][0] = CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 0);
-					//optimizationPointFeature[i + 1][1] = CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
+					optimizationPointFeature[i + 1][0] = CreatePointInCurves((Features::Feature*)IsoParametricCurves[i], 0);
+					optimizationPointFeature[i + 1][1] = CreatePointInCurves((Features::Feature*)IsoParametricCurves[i], 50);
 				}
 				optimizationPointFeature[direction_U - 1][1] = CreatePointInCurves(studioSpline[1][2], 50);
-
+		
 				for (int i = 0; i < direction_U; ++i)
 				{
 					for (int j = 0; j < 2; ++j)
 					{
-						//associativeLine[i][j] = CreateAssociativeLine(optimizationPointFeature[i][j], baseMesh);
+						associativeLine[i][j] = CreateAssociativeLine(optimizationPointFeature[i][j], baseMesh);
 					}
 				}
 				for (int i = 0; i < direction_U; ++i)
 				{
-					//associativeLine[i][2] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[i][0]);
+					associativeLine[i][2] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[i][0]);
 				}
-			}
-			/*else if(direction_V == 5)
-			{
-				CreatePointInCurves(studioSpline[1][0], 50);
-				for (int i = 0; i < direction_U - 2; ++i)
-				{
-					CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
-				}
-				CreatePointInCurves(studioSpline[1][2], 50);
-			}*/
+				//CreateLine(associativeLine[0][0]->EndPoint()->GetValue(), associativeLine[0][1]->EndPoint()->GetValue(), associativeLine[0][2]->EndPoint()->GetValue());
+				
+			}		
 
 			group2->SetEnable(true);
 		}

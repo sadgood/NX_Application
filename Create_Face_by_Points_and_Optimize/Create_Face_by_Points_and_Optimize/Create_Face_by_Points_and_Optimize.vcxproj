@@ -157,7 +157,7 @@
   <ItemGroup>
     <ClCompile Include="CopyInstance.cpp" />
     <ClCompile Include="CreateAssociativeLine.cpp" />
-    <ClCompile Include="CreateLine.cpp" />
+    <ClCompile Include="CreateStudioSpline.cpp" />
     <ClCompile Include="CreateMesh.cpp" />
     <ClCompile Include="CreatePoint.cpp" />
     <ClCompile Include="Create_Face_by_Points_and_Optimize.cpp" />
@@ -167,7 +167,7 @@
   <ItemGroup>
     <ClInclude Include="CopyInstance.h" />
     <ClInclude Include="CreateAssociativeLine.h" />
-    <ClInclude Include="CreateLine.h" />
+    <ClInclude Include="CreateStudioSpline.h" />
     <ClInclude Include="CreateMesh.h" />
     <ClInclude Include="CreatePoint.h" />
     <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp" />

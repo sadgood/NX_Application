@@ -1,5 +1,5 @@
 // NX 8.5.3.3
-// Journal created by zhaoz on Tue May 17 10:22:07 2016 中国标准时间
+// Journal created by zhaoz on Tue May 17 10:25:06 2016 中国标准时间
 //
 #include <uf_defs.h>
 #include <NXOpen/NXException.hxx>
@@ -19,8 +19,6 @@
 #include <NXOpen/GeometricUtilities_OrientXpressBuilder.hxx>
 #include <NXOpen/GeometricUtilities_SplineExtensionBuilder.hxx>
 #include <NXOpen/Line.hxx>
-#include <NXOpen/ModelingView.hxx>
-#include <NXOpen/ModelingViewCollection.hxx>
 #include <NXOpen/NXObject.hxx>
 #include <NXOpen/Part.hxx>
 #include <NXOpen/PartCollection.hxx>
@@ -35,7 +33,6 @@
 #include <NXOpen/Session.hxx>
 #include <NXOpen/Spline.hxx>
 #include <NXOpen/Unit.hxx>
-#include <NXOpen/View.hxx>
 #include <NXOpen/Xform.hxx>
 #include <NXOpen/XformCollection.hxx>
 using namespace NXOpen;
@@ -105,7 +102,7 @@ extern "C" DllExport void ufusr(char *param, int *retCode, int paramLen)
     
     studioSplineBuilderEx1->Extender()->EndValue()->SetRightHandSide("0");
     
-    Expression *expression5(dynamic_cast<Expression *>(workPart->Expressions()->FindObject("p62")));
+    Expression *expression5(dynamic_cast<Expression *>(workPart->Expressions()->FindObject("p71")));
     expression5->SetRightHandSide("0");
     
     studioSplineBuilderEx1->SetInputCurveOption(Features::StudioSplineBuilderEx::InputCurveOptionsHide);
@@ -123,15 +120,15 @@ extern "C" DllExport void ufusr(char *param, int *retCode, int paramLen)
     markId3 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
     
     // ----------------------------------------------
-    //   Menu: Edit->Snap Point->End Point
+    //   Menu: Edit->Snap Point->Existing Point
     // ----------------------------------------------
     Expression *expression6;
-    expression6 = workPart->Expressions()->CreateSystemExpression("1.000000");
+    expression6 = workPart->Expressions()->CreateSystemExpression("0.000000");
     
     Scalar *scalar1;
     scalar1 = workPart->Scalars()->CreateScalarExpression(expression6, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
     
-    Features::AssociativeLine *associativeLine1(dynamic_cast<Features::AssociativeLine *>(workPart->Features()->FindObject("LINE(43)")));
+    Features::AssociativeLine *associativeLine1(dynamic_cast<Features::AssociativeLine *>(workPart->Features()->FindObject("LINE(45)")));
     Line *line1(dynamic_cast<Line *>(associativeLine1->FindObject("CURVE 1")));
     Point *point1;
     point1 = workPart->Points()->CreatePoint(line1, scalar1, SmartObject::UpdateOptionWithinModeling);
@@ -157,13 +154,13 @@ extern "C" DllExport void ufusr(char *param, int *retCode, int paramLen)
     markId4 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
     
     Expression *expression7;
-    expression7 = workPart->Expressions()->CreateSystemExpression("1.000000");
+    expression7 = workPart->Expressions()->CreateSystemExpression("0.000000");
     
     Scalar *scalar2;
     scalar2 = workPart->Scalars()->CreateScalarExpression(expression7, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
     
-    Features::AssociativeLine *associativeLine2(dynamic_cast<Features::AssociativeLine *>(workPart->Features()->FindObject("LINE(44)")));
-    Line *line2(dynamic_cast<Line *>(associativeLine2->FindObject("CURVE 1")));
+    Features::Feature *feature1(dynamic_cast<Features::Feature *>(workPart->Features()->FindObject("Geometry Instance(50:1A:1A)")));
+    Line *line2(dynamic_cast<Line *>(feature1->FindObject("CURVE 1")));
     Point *point2;
     point2 = workPart->Points()->CreatePoint(line2, scalar2, SmartObject::UpdateOptionWithinModeling);
     
@@ -187,27 +184,14 @@ extern "C" DllExport void ufusr(char *param, int *retCode, int paramLen)
     Session::UndoMarkId markId5;
     markId5 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
     
-    Matrix3x3 rotMatrix1;
-    rotMatrix1.Xx = -0.894348956839718;
-    rotMatrix1.Xy = 0.421138248045379;
-    rotMatrix1.Xz = -0.150938793664771;
-    rotMatrix1.Yx = -0.111395128803421;
-    rotMatrix1.Yy = 0.117129576162276;
-    rotMatrix1.Yz = 0.986849425022336;
-    rotMatrix1.Zx = 0.433279434866896;
-    rotMatrix1.Zy = 0.899401600188322;
-    rotMatrix1.Zz = -0.0578419648707482;
-    Point3d translation1(407.080669025078, -592.94604501922, 707.875552181073);
-    workPart->ModelingViews()->WorkView()->SetRotationTranslationScale(rotMatrix1, translation1, 0.215814128233967);
-    
     Expression *expression8;
-    expression8 = workPart->Expressions()->CreateSystemExpression("1.000000");
+    expression8 = workPart->Expressions()->CreateSystemExpression("0.000000");
     
     Scalar *scalar3;
     scalar3 = workPart->Scalars()->CreateScalarExpression(expression8, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
     
-    Features::Feature *feature1(dynamic_cast<Features::Feature *>(workPart->Features()->FindObject("Geometry Instance(49:1A:1A)")));
-    Line *line3(dynamic_cast<Line *>(feature1->FindObject("CURVE 1")));
+    Features::AssociativeLine *associativeLine2(dynamic_cast<Features::AssociativeLine *>(workPart->Features()->FindObject("LINE(47)")));
+    Line *line3(dynamic_cast<Line *>(associativeLine2->FindObject("CURVE 1")));
     Point *point3;
     point3 = workPart->Points()->CreatePoint(line3, scalar3, SmartObject::UpdateOptionWithinModeling);
     
