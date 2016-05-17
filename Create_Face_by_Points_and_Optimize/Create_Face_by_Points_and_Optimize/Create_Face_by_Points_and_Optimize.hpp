@@ -45,6 +45,7 @@
 #include "CreateAssociativeLine.h"
 #include "OffsetLine.h"
 #include "IsoparametricCurves.h"
+#include "UFun.h"
 
 //------------------------------------------------------------------------------
 //Bit Option for Property: SnapPointTypesEnabled
@@ -140,14 +141,16 @@ private:
     NXOpen::BlockStyler::Group* tabPage1;// Block type: Group
     
 private:
+	tag_t facetBody;
 	vector<vector<Features::PointFeature*> > pointFeature; //记录生成的点特征（包括手动点上的两个点以及计算出的中点和镜像后的点）
-	vector<vector<coord> > pt_coods;//记录生成的点坐标（包括手动点上的两个点以及计算出的中点）
-	vector<vector<Features::StudioSpline*> > studioSpline;//记录根据点特征生成的样条曲线
-	Features::ThroughCurveMesh* baseMesh;//记录根据样条曲线生成的曲面
+	vector<vector<coord> > pt_coods; //记录生成的点坐标（包括手动点上的两个点以及计算出的中点）
+	vector<vector<Features::StudioSpline*> > studioSpline; //记录根据点特征生成的样条曲线
+	Features::ThroughCurveMesh* baseMesh; //记录根据样条曲线生成的曲面
 	vector<Features::IsoparametricCurves*> IsoParametricCurves; //U方向生成的偏置曲线
-	vector<vector<Features::PointFeature*> > optimizationPointFeature;//根据uv方向设定的点数量，生成优化时使用的点特征
-	vector<Features::PointFeature*> UControlPoint;//U方向控制点，控制U方向上等参曲线的位置
-	vector<vector<Features::AssociativeLine*> > associativeLine;//根据优化时使用的点特征生成的点-法线直线
-	
+	vector<vector<Features::PointFeature*> > optimizationPointFeature; //根据uv方向设定的点数量，生成优化时使用的点特征
+	vector<Features::PointFeature*> UControlPoint; //U方向控制点，控制U方向上等参曲线的位置
+	vector<vector<Features::AssociativeLine*> > associativeLine; //根据优化时使用的点特征生成的点-法线直线
+	vector<vector<Features::StudioSpline*> > optStudioSpline; //记录根据点-法线端点生成的样条曲线
+	Features::ThroughCurveMesh* optMesh; //记录生成的优化曲面
 };
 #endif //CREATE_FACE_BY_POINTS_AND_OPTIMIZE_H_INCLUDED

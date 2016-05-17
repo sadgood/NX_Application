@@ -163,6 +163,8 @@
     <ClCompile Include="Create_Face_by_Points_and_Optimize.cpp" />
     <ClCompile Include="IsoparametricCurves.cpp" />
     <ClCompile Include="OffsetLine.cpp" />
+    <ClCompile Include="Optimization.cpp" />
+    <ClCompile Include="UFun.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CopyInstance.h" />
@@ -173,6 +175,8 @@
     <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp" />
     <ClInclude Include="IsoparametricCurves.h" />
     <ClInclude Include="OffsetLine.h" />
+    <ClInclude Include="Optimization.h" />
+    <ClInclude Include="UFun.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

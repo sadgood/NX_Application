@@ -332,7 +332,6 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			std::vector<NXOpen::TaggedObject*> selectedObjects;
 			selectedObjects = selection0->GetSelectedObjects(); 
 
-			tag_t facetBody = NULL_TAG;
 			if (!selectedObjects.empty())
 			{
 				TaggedObject *obj = NULL;
@@ -420,15 +419,33 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				{
 					associativeLine[i][2] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[i][0]);
 				}
-				//CreateLine(associativeLine[0][0]->EndPoint()->GetValue(), associativeLine[0][1]->EndPoint()->GetValue(), associativeLine[0][2]->EndPoint()->GetValue());
-				
-			}		
 
+				vector<Features::StudioSpline*> tempSpline;
+				//U方向
+				tempSpline.push_back(CreateStudioSplineByLine(associativeLine[0][0], associativeLine[0][1], associativeLine[0][2]));
+				tempSpline.push_back(CreateStudioSplineByLine(associativeLine[1][0], associativeLine[1][1], associativeLine[1][2]));
+				tempSpline.push_back(CreateStudioSplineByLine(associativeLine[2][0], associativeLine[2][1], associativeLine[2][2]));
+				optStudioSpline.push_back(tempSpline);
+				tempSpline.clear();
+
+				//V方向
+				tempSpline.push_back(CreateStudioSplineByLine(associativeLine[0][0], associativeLine[1][0], associativeLine[2][0]));
+				tempSpline.push_back(CreateStudioSplineByLine(associativeLine[0][1], associativeLine[1][1], associativeLine[2][1]));
+				tempSpline.push_back(CreateStudioSplineByLine(associativeLine[0][2], associativeLine[1][2], associativeLine[2][2]));
+				optStudioSpline.push_back(tempSpline);
+				tempSpline.clear();
+
+				optMesh = CreateThroughCurveMesh(optStudioSpline);
+			}		
 			group2->SetEnable(true);
 		}
         else if(block == button02)
         {
         //---------Enter your code here-----------
+			tag_t sheetBody = optMesh->GetFaces().at(0)->GetTag();
+			double result = 0.0;
+			MISC_AskSheetToFacetAverageDistance(facetBody, sheetBody, result);
+
 			group3->SetEnable(true);
         }
         else if(block == button03)

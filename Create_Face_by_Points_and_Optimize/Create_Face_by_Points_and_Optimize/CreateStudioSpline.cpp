@@ -124,23 +124,29 @@ extern Features::StudioSpline* CreateStudioSplineByLine(Features::AssociativeLin
 	// ----------------------------------------------
 	//   Dialog Begin Point
 	// ----------------------------------------------
-	//Point *point5(dynamic_cast<Point *>(pointFeature3->FindObject("POINT 1")));
-	Point *point6;
-	//point6 = workPart->Points()->CreatePoint(point5, nullXform, SmartObject::UpdateOptionWithinModeling);
+	Expression *expression3;
+	expression3 = workPart->Expressions()->CreateSystemExpression("1.000000");
+
+	Scalar *scalar3;
+	scalar3 = workPart->Scalars()->CreateScalarExpression(expression1, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
+
+	Line *line3(dynamic_cast<Line *>(associativeLine3->FindObject("CURVE 1")));
+	Point *point3;
+	point3 = workPart->Points()->CreatePoint(line3, scalar3, SmartObject::UpdateOptionWithinModeling);
 
 	Features::GeometricConstraintData *geometricConstraintData3;
 	geometricConstraintData3 = studioSplineBuilderEx1->ConstraintManager()->CreateGeometricConstraintData();
 
-	geometricConstraintData3->SetPoint(point6);
+	geometricConstraintData3->SetPoint(point3);
 
 	studioSplineBuilderEx1->ConstraintManager()->Append(geometricConstraintData3);
 
 	studioSplineBuilderEx1->Evaluate();
 
-	NXObject *nXObject1;
-	nXObject1 = studioSplineBuilderEx1->Commit();
+	NXObject *nXObject;
+	nXObject = studioSplineBuilderEx1->Commit();
 
 	studioSplineBuilderEx1->Destroy();
 
-	return (Features::StudioSpline*)nXObject1;
+	return (Features::StudioSpline*)nXObject;
 }
