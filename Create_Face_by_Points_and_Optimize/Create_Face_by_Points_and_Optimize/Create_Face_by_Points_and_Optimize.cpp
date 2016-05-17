@@ -64,6 +64,8 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 		theDialog->AddInitializeHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::initialize_cb));
 		theDialog->AddDialogShownHandler(make_callback(this, &Create_Face_by_Points_and_Optimize::dialogShown_cb));
 
+		facetBody = 0;
+
 		vector<Features::PointFeature*> temp;
 		for (int i = 0; i < 3; ++i)
 		{
@@ -99,6 +101,7 @@ Create_Face_by_Points_and_Optimize::Create_Face_by_Points_and_Optimize()
 		}
 
 		baseMesh = NULL;
+		optMesh = NULL;
     }
     catch(exception& ex)
     {

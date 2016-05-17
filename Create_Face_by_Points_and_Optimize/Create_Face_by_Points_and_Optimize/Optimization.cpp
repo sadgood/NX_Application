@@ -63,8 +63,4 @@ extern  void OptimizeFace(const string &OptName, int *retCode, int paramLen)
 	optimizationBuilder1->RunOptimization();
 
 	optimizationBuilder1->Destroy();
-
-	// ----------------------------------------------
-	//   Menu: Tools->Journal->Stop Recording
-	// ----------------------------------------------
 }
