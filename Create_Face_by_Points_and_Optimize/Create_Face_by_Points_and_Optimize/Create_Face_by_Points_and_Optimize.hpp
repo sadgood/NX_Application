@@ -39,7 +39,7 @@
 
 #include <uf.h>
 #include "CreatePoint.h"
-#include "CreateLine.h"
+#include "CreateStudioSpline.h"
 #include "CreateMesh.h"
 #include "CopyInstance.h"
 #include "CreateAssociativeLine.h"

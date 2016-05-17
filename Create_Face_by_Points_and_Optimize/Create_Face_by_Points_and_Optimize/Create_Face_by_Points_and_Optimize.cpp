@@ -351,9 +351,9 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				pointFeature[2][2] = (Features::PointFeature*)CopyInstance(pointFeature[0][2]);
 
 				for (int i = 0; i < 3; ++i)
-					studioSpline[0][i] = CreateLine(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);  //U方向三条线
+					studioSpline[0][i] = CreateStudioSplineByPoints(pointFeature[i][0], pointFeature[i][1], pointFeature[i][2]);  //U方向三条线
 				for (int i = 0; i < 3; ++i)
-					studioSpline[1][i] = CreateLine(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);  //V方向三条线
+					studioSpline[1][i] = CreateStudioSplineByPoints(pointFeature[0][i], pointFeature[1][i], pointFeature[2][i]);  //V方向三条线
 
 				baseMesh = CreateThroughCurveMesh(studioSpline);  //根据曲线网格生成曲面
 				group1->SetEnable(true);
@@ -408,7 +408,7 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 					optimizationPointFeature[i + 1][1] = CreatePointInCurves((Features::Feature*)IsoParametricCurves[i], 50);
 				}
 				optimizationPointFeature[direction_U - 1][1] = CreatePointInCurves(studioSpline[1][2], 50);
-
+		
 				for (int i = 0; i < direction_U; ++i)
 				{
 					for (int j = 0; j < 2; ++j)
@@ -420,16 +420,9 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 				{
 					associativeLine[i][2] = (Features::AssociativeLine*)CopyInstance((Features::Feature*)associativeLine[i][0]);
 				}
-			}
-			/*else if(direction_V == 5)
-			{
-				CreatePointInCurves(studioSpline[1][0], 50);
-				for (int i = 0; i < direction_U - 2; ++i)
-				{
-					CreatePointInCurves((Features::Feature*)aoocsbuilder[i], 50);
-				}
-				CreatePointInCurves(studioSpline[1][2], 50);
-			}*/
+				//CreateLine(associativeLine[0][0]->EndPoint()->GetValue(), associativeLine[0][1]->EndPoint()->GetValue(), associativeLine[0][2]->EndPoint()->GetValue());
+				
+			}		
 
 			group2->SetEnable(true);
 		}

@@ -24,9 +24,6 @@
     <ClCompile Include="CreatePoint.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CreateLine.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="CreateMesh.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -42,15 +39,15 @@
     <ClCompile Include="IsoparametricCurves.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CreateStudioSpline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CreatePoint.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CreateLine.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CreateMesh.h">
@@ -66,6 +63,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="IsoparametricCurves.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateStudioSpline.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

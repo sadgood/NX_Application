@@ -1,27 +1,24 @@
 // NX 8.5.3.3
-// Journal created by zhaoz on Thu May 05 16:19:35 2016 中国标准时间
+// Journal created by zhaoz on Tue May 17 10:22:07 2016 中国标准时间
 //
 #include <uf_defs.h>
 #include <NXOpen/NXException.hxx>
 #include <NXOpen/Session.hxx>
-#include <NXOpen/Axis.hxx>
 #include <NXOpen/BasePart.hxx>
 #include <NXOpen/Builder.hxx>
-#include <NXOpen/CurveDumbRule.hxx>
-#include <NXOpen/DatumCollection.hxx>
-#include <NXOpen/DatumPlane.hxx>
+#include <NXOpen/CoordinateSystem.hxx>
 #include <NXOpen/Direction.hxx>
 #include <NXOpen/Expression.hxx>
 #include <NXOpen/ExpressionCollection.hxx>
+#include <NXOpen/Features_AssociativeLine.hxx>
 #include <NXOpen/Features_Feature.hxx>
-#include <NXOpen/Features_FeatureBuilder.hxx>
 #include <NXOpen/Features_FeatureCollection.hxx>
-#include <NXOpen/Features_GeomcopyBuilder.hxx>
-#include <NXOpen/Features_PointFeature.hxx>
-#include <NXOpen/GeometricUtilities_BetweenLocationsData.hxx>
-#include <NXOpen/GeometricUtilities_GeometryLocationData.hxx>
-#include <NXOpen/GeometricUtilities_OnPathDimensionBuilder.hxx>
-#include <NXOpen/IPlane.hxx>
+#include <NXOpen/Features_GeometricConstraintData.hxx>
+#include <NXOpen/Features_GeometricConstraintDataManager.hxx>
+#include <NXOpen/Features_StudioSplineBuilderEx.hxx>
+#include <NXOpen/GeometricUtilities_OrientXpressBuilder.hxx>
+#include <NXOpen/GeometricUtilities_SplineExtensionBuilder.hxx>
+#include <NXOpen/Line.hxx>
 #include <NXOpen/ModelingView.hxx>
 #include <NXOpen/ModelingViewCollection.hxx>
 #include <NXOpen/NXObject.hxx>
@@ -30,161 +27,275 @@
 #include <NXOpen/Plane.hxx>
 #include <NXOpen/PlaneCollection.hxx>
 #include <NXOpen/Point.hxx>
+#include <NXOpen/PointCollection.hxx>
 #include <NXOpen/Preferences_PartModeling.hxx>
 #include <NXOpen/Preferences_PartPreferences.hxx>
-#include <NXOpen/ScCollector.hxx>
-#include <NXOpen/ScCollectorCollection.hxx>
-#include <NXOpen/ScRuleFactory.hxx>
-#include <NXOpen/Section.hxx>
-#include <NXOpen/SelectObject.hxx>
-#include <NXOpen/SelectObjectList.hxx>
-#include <NXOpen/SelectionIntentRule.hxx>
+#include <NXOpen/Scalar.hxx>
+#include <NXOpen/ScalarCollection.hxx>
 #include <NXOpen/Session.hxx>
-#include <NXOpen/TaggedObject.hxx>
-#include <NXOpen/TaggedObjectList.hxx>
+#include <NXOpen/Spline.hxx>
 #include <NXOpen/Unit.hxx>
 #include <NXOpen/View.hxx>
+#include <NXOpen/Xform.hxx>
+#include <NXOpen/XformCollection.hxx>
 using namespace NXOpen;
+
+extern "C" DllExport int ufusr_ask_unload()
+{
+    return (int)Session::LibraryUnloadOptionImmediately;
+}
 
 extern "C" DllExport void ufusr(char *param, int *retCode, int paramLen)
 {
     Session *theSession = Session::GetSession();
     Part *workPart(theSession->Parts()->Work());
+    Part *displayPart(theSession->Parts()->Display());
     // ----------------------------------------------
-    //   Menu: Insert->Associative Copy->Instance Geometry...
+    //   Menu: Insert->Curve->Studio Spline...
     // ----------------------------------------------
+    Session::UndoMarkId markId1;
+    markId1 = theSession->SetUndoMark(Session::MarkVisibilityVisible, "Start");
     
-    Features::Feature *nullFeatures_Feature(NULL);
+    NXObject *nullNXObject(NULL);
     
-    Features::GeomcopyBuilder *geomcopyBuilder1;
-    geomcopyBuilder1 = workPart->Features()->CreateGeomcopyBuilder(nullFeatures_Feature);
+    if ( !workPart->Preferences()->Modeling()->GetHistoryMode() )
+    {
+        throw NXException::Create("Create or edit of a Feature was recorded in History Mode but playback is in History-Free Mode.");
+    }
+    
+    Features::StudioSplineBuilderEx *studioSplineBuilderEx1;
+    studioSplineBuilderEx1 = workPart->Features()->CreateStudioSplineBuilderEx(nullNXObject);
     
     Point3d origin1(0.0, 0.0, 0.0);
     Vector3d normal1(0.0, 0.0, 1.0);
     Plane *plane1;
     plane1 = workPart->Planes()->CreatePlane(origin1, normal1, SmartObject::UpdateOptionWithinModeling);
     
-    geomcopyBuilder1->SetMirrorPlane(plane1);
+    studioSplineBuilderEx1->SetDrawingPlane(plane1);
     
-    geomcopyBuilder1->SetType(Features::GeomcopyBuilder::TransformTypesMirror);
+    Unit *unit1;
+    unit1 = studioSplineBuilderEx1->Extender()->EndValue()->Units();
     
-    geomcopyBuilder1->TranslateDistance()->SetRightHandSide("10");
+    Expression *expression1;
+    expression1 = workPart->Expressions()->CreateSystemExpressionWithUnits("0", unit1);
     
-    geomcopyBuilder1->RotateDistance()->SetRightHandSide("0");
-    
-    geomcopyBuilder1->OnPathDistance()->Expression()->SetRightHandSide("0");
-    
-    geomcopyBuilder1->RotateAngle()->SetRightHandSide("45");
-    
-    geomcopyBuilder1->AlongPathAngle()->SetRightHandSide("0");
-    
-    geomcopyBuilder1->NumberOfCopies()->SetRightHandSide("1");
-    
-    geomcopyBuilder1->SetCsysMirrorOption(Features::GeomcopyBuilder::CsysMirrorOptionsMirrorYAndZ);
-    
-    ScCollector *scCollector1;
-    scCollector1 = workPart->ScCollectors()->CreateCollector();
-    
-    std::vector<Point *> points1(1);
-    Features::PointFeature *pointFeature1(dynamic_cast<Features::PointFeature *>(workPart->Features()->FindObject("POINT(1)")));
-    Point *point1(dynamic_cast<Point *>(pointFeature1->FindObject("POINT 1")));
-    points1[0] = point1;
-    CurveDumbRule *curveDumbRule1;
-    curveDumbRule1 = workPart->ScRuleFactory()->CreateRuleCurveDumbFromPoints(points1);
-    
-    std::vector<SelectionIntentRule *> rules1(1);
-    rules1[0] = curveDumbRule1;
-    scCollector1->ReplaceRules(rules1, false);
-    
-    bool added1;
-    added1 = geomcopyBuilder1->GeometryToInstance()->Add(scCollector1);
-    
-    std::vector<Point *> points2(2);
-    points2[0] = point1;
-    Features::PointFeature *pointFeature2(dynamic_cast<Features::PointFeature *>(workPart->Features()->FindObject("POINT(2)")));
-    Point *point2(dynamic_cast<Point *>(pointFeature2->FindObject("POINT 1")));
-    points2[1] = point2;
-    CurveDumbRule *curveDumbRule2;
-    curveDumbRule2 = workPart->ScRuleFactory()->CreateRuleCurveDumbFromPoints(points2);
-    
-    std::vector<SelectionIntentRule *> rules2(1);
-    rules2[0] = curveDumbRule2;
-    scCollector1->ReplaceRules(rules2, false);
-    
-    plane1->SetMethod(PlaneTypes::MethodTypeDistance);
-    
-    std::vector<NXObject *> geom1(1);
-    DatumPlane *datumPlane1(dynamic_cast<DatumPlane *>(workPart->Datums()->FindObject("DATUM_CSYS(0) XY plane")));
-    geom1[0] = datumPlane1;
-    plane1->SetGeometry(geom1);
-    
-    plane1->SetFlip(false);
-    
-    plane1->SetReverseSide(false);
-    
-    Expression *expression3;
-    expression3 = plane1->Expression();
-    
-    expression3->SetRightHandSide("0");
-    
-    plane1->SetAlternate(PlaneTypes::AlternateTypeOne);
-    
-    plane1->Evaluate();
-    
-    plane1->SetMethod(PlaneTypes::MethodTypeDistance);
-    
-    std::vector<NXObject *> geom2(1);
-    geom2[0] = datumPlane1;
-    plane1->SetGeometry(geom2);
-    
-    plane1->SetFlip(false);
-    
-    plane1->SetReverseSide(false);
-    
-    Expression *expression4;
-    expression4 = plane1->Expression();
-    
-    expression4->SetRightHandSide("0");
-    
-    plane1->SetAlternate(PlaneTypes::AlternateTypeOne);
-    
-    plane1->Evaluate();
-    
-    Features::Feature *feature1;
-    feature1 = geomcopyBuilder1->CommitFeature();
-    
-    Expression *expression5(geomcopyBuilder1->NumberOfCopies());
-    geomcopyBuilder1->Destroy();
-    
-    Features::GeomcopyBuilder *geomcopyBuilder2;
-    geomcopyBuilder2 = workPart->Features()->CreateGeomcopyBuilder(nullFeatures_Feature);
+    Expression *expression2;
+    expression2 = workPart->Expressions()->CreateSystemExpressionWithUnits("0", unit1);
     
     Point3d origin2(0.0, 0.0, 0.0);
     Vector3d normal2(0.0, 0.0, 1.0);
     Plane *plane2;
     plane2 = workPart->Planes()->CreatePlane(origin2, normal2, SmartObject::UpdateOptionWithinModeling);
     
-    geomcopyBuilder2->SetMirrorPlane(plane2);
+    studioSplineBuilderEx1->SetMovementPlane(plane2);
     
-    geomcopyBuilder2->SetType(Features::GeomcopyBuilder::TransformTypesMirror);
+    Expression *expression3;
+    expression3 = workPart->Expressions()->CreateSystemExpressionWithUnits("0", unit1);
     
-    geomcopyBuilder2->TranslateDistance()->SetRightHandSide("10");
+    Expression *expression4;
+    expression4 = workPart->Expressions()->CreateSystemExpressionWithUnits("0", unit1);
     
-    geomcopyBuilder2->RotateDistance()->SetRightHandSide("0");
+    studioSplineBuilderEx1->OrientExpress()->SetReferenceOption(GeometricUtilities::OrientXpressBuilder::ReferenceWcsDisplayPart);
     
-    geomcopyBuilder2->OnPathDistance()->Expression()->SetRightHandSide("0");
+    studioSplineBuilderEx1->SetMovementMethod(Features::StudioSplineBuilderEx::MovementMethodTypeView);
     
-    geomcopyBuilder2->RotateAngle()->SetRightHandSide("45");
+    studioSplineBuilderEx1->OrientExpress()->SetAxisOption(GeometricUtilities::OrientXpressBuilder::AxisPassive);
     
-    geomcopyBuilder2->AlongPathAngle()->SetRightHandSide("0");
+    studioSplineBuilderEx1->OrientExpress()->SetPlaneOption(GeometricUtilities::OrientXpressBuilder::PlanePassive);
     
-    geomcopyBuilder2->NumberOfCopies()->SetRightHandSide("1");
+    studioSplineBuilderEx1->Extender()->EndValue()->SetRightHandSide("0");
     
-    geomcopyBuilder2->SetCsysMirrorOption(Features::GeomcopyBuilder::CsysMirrorOptionsMirrorYAndZ);
+    Expression *expression5(dynamic_cast<Expression *>(workPart->Expressions()->FindObject("p62")));
+    expression5->SetRightHandSide("0");
+    
+    studioSplineBuilderEx1->SetInputCurveOption(Features::StudioSplineBuilderEx::InputCurveOptionsHide);
+    
+    theSession->SetUndoMarkName(markId1, NXString("Studio Spline \345\257\271\350\257\235\346\241\206", NXString::UTF8));
+    
+    studioSplineBuilderEx1->SetMatchKnotsType(Features::StudioSplineBuilderEx::MatchKnotsTypesNone);
+    
+    Session::UndoMarkId markId2;
+    markId2 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
+    
+    theSession->DeleteUndoMark(markId2, NULL);
+    
+    Session::UndoMarkId markId3;
+    markId3 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
     
     // ----------------------------------------------
-    //   Dialog Begin Instance Geometry
+    //   Menu: Edit->Snap Point->End Point
     // ----------------------------------------------
+    Expression *expression6;
+    expression6 = workPart->Expressions()->CreateSystemExpression("1.000000");
+    
+    Scalar *scalar1;
+    scalar1 = workPart->Scalars()->CreateScalarExpression(expression6, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
+    
+    Features::AssociativeLine *associativeLine1(dynamic_cast<Features::AssociativeLine *>(workPart->Features()->FindObject("LINE(43)")));
+    Line *line1(dynamic_cast<Line *>(associativeLine1->FindObject("CURVE 1")));
+    Point *point1;
+    point1 = workPart->Points()->CreatePoint(line1, scalar1, SmartObject::UpdateOptionWithinModeling);
+    
+    NXObject *nXObject1;
+    Xform *xform1;
+    xform1 = workPart->Xforms()->CreateExtractXform(line1, SmartObject::UpdateOptionWithinModeling, false, &nXObject1);
+    
+    Features::GeometricConstraintData *geometricConstraintData1;
+    geometricConstraintData1 = studioSplineBuilderEx1->ConstraintManager()->CreateGeometricConstraintData();
+    
+    geometricConstraintData1->SetPoint(point1);
+    
+    studioSplineBuilderEx1->ConstraintManager()->Append(geometricConstraintData1);
+    
+    theSession->SetUndoMarkName(markId3, NXString("\350\211\272\346\234\257\346\240\267\346\235\241 - \351\200\211\346\213\251", NXString::UTF8));
+    
+    theSession->SetUndoMarkVisibility(markId3, NULL, Session::MarkVisibilityVisible);
+    
+    theSession->SetUndoMarkVisibility(markId1, NULL, Session::MarkVisibilityInvisible);
+    
+    Session::UndoMarkId markId4;
+    markId4 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
+    
+    Expression *expression7;
+    expression7 = workPart->Expressions()->CreateSystemExpression("1.000000");
+    
+    Scalar *scalar2;
+    scalar2 = workPart->Scalars()->CreateScalarExpression(expression7, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
+    
+    Features::AssociativeLine *associativeLine2(dynamic_cast<Features::AssociativeLine *>(workPart->Features()->FindObject("LINE(44)")));
+    Line *line2(dynamic_cast<Line *>(associativeLine2->FindObject("CURVE 1")));
+    Point *point2;
+    point2 = workPart->Points()->CreatePoint(line2, scalar2, SmartObject::UpdateOptionWithinModeling);
+    
+    NXObject *nXObject2;
+    Xform *xform2;
+    xform2 = workPart->Xforms()->CreateExtractXform(line2, SmartObject::UpdateOptionWithinModeling, false, &nXObject2);
+    
+    Features::GeometricConstraintData *geometricConstraintData2;
+    geometricConstraintData2 = studioSplineBuilderEx1->ConstraintManager()->CreateGeometricConstraintData();
+    
+    geometricConstraintData2->SetPoint(point2);
+    
+    studioSplineBuilderEx1->ConstraintManager()->Append(geometricConstraintData2);
+    
+    theSession->SetUndoMarkName(markId4, NXString("\350\211\272\346\234\257\346\240\267\346\235\241 - \351\200\211\346\213\251", NXString::UTF8));
+    
+    theSession->SetUndoMarkVisibility(markId4, NULL, Session::MarkVisibilityVisible);
+    
+    theSession->SetUndoMarkVisibility(markId1, NULL, Session::MarkVisibilityInvisible);
+    
+    Session::UndoMarkId markId5;
+    markId5 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
+    
+    Matrix3x3 rotMatrix1;
+    rotMatrix1.Xx = -0.894348956839718;
+    rotMatrix1.Xy = 0.421138248045379;
+    rotMatrix1.Xz = -0.150938793664771;
+    rotMatrix1.Yx = -0.111395128803421;
+    rotMatrix1.Yy = 0.117129576162276;
+    rotMatrix1.Yz = 0.986849425022336;
+    rotMatrix1.Zx = 0.433279434866896;
+    rotMatrix1.Zy = 0.899401600188322;
+    rotMatrix1.Zz = -0.0578419648707482;
+    Point3d translation1(407.080669025078, -592.94604501922, 707.875552181073);
+    workPart->ModelingViews()->WorkView()->SetRotationTranslationScale(rotMatrix1, translation1, 0.215814128233967);
+    
+    Expression *expression8;
+    expression8 = workPart->Expressions()->CreateSystemExpression("1.000000");
+    
+    Scalar *scalar3;
+    scalar3 = workPart->Scalars()->CreateScalarExpression(expression8, Scalar::DimensionalityTypeNone, SmartObject::UpdateOptionWithinModeling);
+    
+    Features::Feature *feature1(dynamic_cast<Features::Feature *>(workPart->Features()->FindObject("Geometry Instance(49:1A:1A)")));
+    Line *line3(dynamic_cast<Line *>(feature1->FindObject("CURVE 1")));
+    Point *point3;
+    point3 = workPart->Points()->CreatePoint(line3, scalar3, SmartObject::UpdateOptionWithinModeling);
+    
+    NXObject *nXObject3;
+    Xform *xform3;
+    xform3 = workPart->Xforms()->CreateExtractXform(line3, SmartObject::UpdateOptionWithinModeling, false, &nXObject3);
+    
+    Features::GeometricConstraintData *geometricConstraintData3;
+    geometricConstraintData3 = studioSplineBuilderEx1->ConstraintManager()->CreateGeometricConstraintData();
+    
+    geometricConstraintData3->SetPoint(point3);
+    
+    studioSplineBuilderEx1->ConstraintManager()->Append(geometricConstraintData3);
+    
+    theSession->SetUndoMarkName(markId5, NXString("\350\211\272\346\234\257\346\240\267\346\235\241 - \351\200\211\346\213\251", NXString::UTF8));
+    
+    theSession->SetUndoMarkVisibility(markId5, NULL, Session::MarkVisibilityVisible);
+    
+    theSession->SetUndoMarkVisibility(markId1, NULL, Session::MarkVisibilityInvisible);
+    
+    Session::UndoMarkId markId6;
+    markId6 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
+    
+    Session::UndoMarkId markId7;
+    markId7 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
+    
+    theSession->DeleteUndoMark(markId7, NULL);
+    
+    Session::UndoMarkId markId8;
+    markId8 = theSession->SetUndoMark(Session::MarkVisibilityInvisible, "Studio Spline");
+    
+    NXObject *nXObject4;
+    nXObject4 = studioSplineBuilderEx1->Commit();
+    
+    theSession->DeleteUndoMark(markId8, NULL);
+    
+    theSession->SetUndoMarkName(markId1, "Studio Spline");
+    
+    studioSplineBuilderEx1->Destroy();
+    
+    try
+    {
+        // 表达式仍然在使用中。
+        workPart->Expressions()->Delete(expression2);
+    }
+    catch (const NXException &ex)
+    {
+      ex.AssertErrorCode(1050029);
+    }
+    
+    try
+    {
+        // 表达式仍然在使用中。
+        workPart->Expressions()->Delete(expression4);
+    }
+    catch (const NXException &ex)
+    {
+      ex.AssertErrorCode(1050029);
+    }
+    
+    try
+    {
+        // 表达式仍然在使用中。
+        workPart->Expressions()->Delete(expression1);
+    }
+    catch (const NXException &ex)
+    {
+      ex.AssertErrorCode(1050029);
+    }
+    
+    try
+    {
+        // 表达式仍然在使用中。
+        workPart->Expressions()->Delete(expression3);
+    }
+    catch (const NXException &ex)
+    {
+      ex.AssertErrorCode(1050029);
+    }
+    
+    theSession->SetUndoMarkVisibility(markId1, NULL, Session::MarkVisibilityVisible);
+    
+    theSession->DeleteUndoMark(markId5, NULL);
+    
+    theSession->DeleteUndoMark(markId4, NULL);
+    
+    theSession->DeleteUndoMark(markId3, NULL);
+    
     // ----------------------------------------------
     //   Menu: Tools->Journal->Stop Recording
     // ----------------------------------------------
