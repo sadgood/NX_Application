@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="CopyInstance.cpp" />
     <ClCompile Include="CreateAssociativeLine.cpp" />
+    <ClCompile Include="CreateExpression.cpp" />
     <ClCompile Include="CreateStudioSpline.cpp" />
     <ClCompile Include="CreateMesh.cpp" />
     <ClCompile Include="CreatePoint.cpp" />
@@ -169,6 +170,7 @@
   <ItemGroup>
     <ClInclude Include="CopyInstance.h" />
     <ClInclude Include="CreateAssociativeLine.h" />
+    <ClInclude Include="CreateExpression.h" />
     <ClInclude Include="CreateStudioSpline.h" />
     <ClInclude Include="CreateMesh.h" />
     <ClInclude Include="CreatePoint.h" />

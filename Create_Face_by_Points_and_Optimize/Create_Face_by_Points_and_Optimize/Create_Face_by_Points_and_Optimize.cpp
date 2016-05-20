@@ -449,6 +449,8 @@ int Create_Face_by_Points_and_Optimize::update_cb(NXOpen::BlockStyler::UIBlock* 
 			double result = 0.0;
 			MISC_AskSheetToFacetAverageDistance(facetBody, sheetBody, result);
 
+			
+
 			group3->SetEnable(true);
         }
         else if(block == button03)

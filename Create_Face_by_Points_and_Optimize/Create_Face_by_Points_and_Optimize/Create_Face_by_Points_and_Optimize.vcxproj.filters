@@ -48,6 +48,9 @@
     <ClCompile Include="Optimization.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CreateExpression.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Create_Face_by_Points_and_Optimize.hpp">
@@ -78,6 +81,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Optimization.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateExpression.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

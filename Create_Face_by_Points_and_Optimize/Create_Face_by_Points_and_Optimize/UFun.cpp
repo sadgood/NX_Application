@@ -3,8 +3,7 @@
 extern void MISC_AskSheetToFacetAverageDistance(
 	tag_t facetBody,    /*<I>*/
 	tag_t sheetBody,
-	double &result       /*<O>*/
-)
+	double &result       /*<O>*/)
 {
 	int errorCode = 0;
 	errorCode = UF_CALL(UF_initialize());
